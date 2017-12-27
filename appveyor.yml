@@ -16,10 +16,8 @@ matrix:
   fast_finish: true
 
 before_build:
-  - set PATH=C:\Python36-x64;%PATH%
-  - bash -c "which python"
-  - bash -c "python -V"
-  - bash -c "python -m pip install virtualenv wheel"
+  - git config --global user.email "ci@appveyor.com"
+  - git config --global user.name "CI"
   - cmake --version
   - cmake -H. -Bbuild -G "%CMAKE_GENERATOR%"
 
@@ -27,5 +25,5 @@ build_script:
   - cmake --build build --config Release --target ALL_BUILD -- %MSBUILD_FLAGS%
 
 test_script:
-  - cd build && ctest -C Release --output-on-failure
+  - cmake --build build --config Release --target RUN_TESTS
 
