@@ -24,4 +24,7 @@ else()
  set(BUILD_SHARED_LIBS OFF)
 endif()
 
+# Build Dependencies
+add_subdirectory(cmake)
+
 add_subdirectory(FooApp)

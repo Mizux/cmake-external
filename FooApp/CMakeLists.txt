@@ -14,7 +14,7 @@ if(UNIX)
 			"@loader_path/../lib")
 	endif()
 endif()
-#target_link_libraries(${PROJECT_NAME} PRIVATE )
+target_link_libraries(${PROJECT_NAME} PRIVATE zlibstatic)
 add_executable(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 # Test
