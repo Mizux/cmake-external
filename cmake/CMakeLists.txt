@@ -46,4 +46,30 @@ if(result)
   message(FATAL_ERROR "Build step for gflags failed: ${result}")
 endif()
 
+set(BUILD_TESTING OFF)
 add_subdirectory(${CMAKE_BINARY_DIR}/gflags ${CMAKE_BINARY_DIR}/gflags)
+
+############
+##  GLOG  ##
+############
+# Download and unpack glog at configure time
+configure_file(
+	${CMAKE_CURRENT_SOURCE_DIR}/glog.CMakeLists.txt
+	${CMAKE_BINARY_DIR}/glog-download/CMakeLists.txt)
+execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
+  RESULT_VARIABLE result
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/glog-download )
+if(result)
+  message(FATAL_ERROR "CMake step for glog failed: ${result}")
+endif()
+execute_process(COMMAND ${CMAKE_COMMAND} --build .
+  RESULT_VARIABLE result
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/glog-download )
+if(result)
+  message(FATAL_ERROR "Build step for glog failed: ${result}")
+endif()
+
+set(WITH_GFLAGS ON)
+set(BUILD_TESTING OFF)
+list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BUILD_DIR}/gflags)
+add_subdirectory(${CMAKE_BINARY_DIR}/glog ${CMAKE_BINARY_DIR}/glog)
