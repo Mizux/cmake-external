@@ -3,7 +3,6 @@ project(FooApp VERSION 1.0.0 LANGUAGES CXX)
 file(GLOB _SRCS "src/*.[hc]pp")
 
 add_executable(${PROJECT_NAME} ${_SRCS})
-# need to find FooBar AND Foo since Foo is a public dependencies of FooBar
 if(UNIX)
 	if(NOT APPLE)
 		set_target_properties(${PROJECT_NAME} PROPERTIES
