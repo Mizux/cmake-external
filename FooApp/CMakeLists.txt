@@ -16,6 +16,7 @@ endif()
 target_link_libraries(${PROJECT_NAME} PRIVATE
 	gflags
 	glog
+	Cbc
 	zlibstatic)
 add_executable(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
