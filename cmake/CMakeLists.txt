@@ -1,4 +1,5 @@
 set(BUILD_SHARED_LIBS OFF)
+set(BUILD_TESTING OFF)
 set(SKIP_INSTALL_ALL ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
@@ -47,7 +48,6 @@ if(result)
   message(FATAL_ERROR "Build step for gflags failed: ${result}")
 endif()
 
-set(BUILD_TESTING OFF)
 #set(GFLAGS_IS_SUBPROJECT TRUE)
 add_subdirectory(${CMAKE_BINARY_DIR}/gflags ${CMAKE_BINARY_DIR}/gflags)
 
@@ -76,20 +76,20 @@ endif()
 # pull it into glog's export set and will get confused and fail
 # Instead we manually specify location and include path for gflags, this way
 # cmake does not create inter-target dependency and export set does not fail
-set(WITH_GFLAGS "OFF" CACHE "" INTERNAL)
-set(HAVE_LIB_GFLAGS "ON")
-set(gflags_NAMESPACE "gflags")
-set(gflags_FOUND "ON")
-get_target_property(gflags_INCLUDE_DIR gflags INTERFACE_INCLUDE_DIRECTORIES)
+#set(WITH_GFLAGS "OFF" CACHE "" INTERNAL)
+#set(HAVE_LIB_GFLAGS "ON")
+#set(gflags_NAMESPACE "gflags")
+#set(gflags_FOUND "ON")
+#get_target_property(gflags_INCLUDE_DIR gflags INTERFACE_INCLUDE_DIRECTORIES)
 #get_target_property(gflags_LIBRARIES gflags INTERFACE_LINK_LIBRARIES)
-set(gflags_LIBRARIES $<TARGET_FILE:gflags>)
-set(BUILD_TESTING OFF)
+#set(gflags_LIBRARIES $<TARGET_FILE:gflags>)
 
+set(gflags_NAMESPACE "gflags" CACHE STRING "Namespace for gflags" NTERNAL)
 add_subdirectory(${CMAKE_BINARY_DIR}/glog ${CMAKE_BINARY_DIR}/glog)
 
 # We need to ask CMake to compile gflags before compiling glog, so that
 # ${gflags_LIBRARIES} actually exists
-add_dependencies(glog gflags)
+#add_dependencies(glog gflags)
 
 ################
 ##  PROTOBUF  ##
