@@ -4,7 +4,7 @@
 # Introduction
 
 This is an example of how to create a Modern [CMake](https://cmake.org/) C++ Project using
- [ExternalProject](https://cmake.org/cmake/help/latest/module/ExternalProject.html) module.  
+ [ExternalProject](https://cmake.org/cmake/help/latest/module/ExternalProject.html) module to include dependency(ies) as subproject(s).
 
 This project should run on Linux, Mac and Windows.
 
@@ -12,8 +12,9 @@ This project should run on Linux, Mac and Windows.
 To complexify a little, the CMake project is composed of one executable (FooApp)
 with the following dependencies:  
 ```sh
-FooApp: zlib gflags glog
+FooApp: zlib gflags glog protobuf Cbc
 ```
+All dependencies are built in static to have one standalone executable.
 ## Project directory layout
 Thus the project layout is as follow:
 ```sh
@@ -22,6 +23,7 @@ Thus the project layout is as follow:
  ├── CMakeLists.txt
  ├── gflags.CMakeLists.txt
  ├── glog.CMakeLists.txt
+ ├── protobuf.CMakeLists.txt
  └── zlib.CMakeLists.txt
  FooApp
  ├── CMakeLists.txt

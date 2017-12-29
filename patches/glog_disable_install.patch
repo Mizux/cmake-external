@@ -1,0 +1,17 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2fd5351..07d871d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -602,6 +602,7 @@ if (gflags_FOUND)
+   set (gflags_DEPENDENCY "find_dependency (gflags ${gflags_VERSION})")
+ endif (gflags_FOUND)
+ 
++if(NOT SKIP_INSTALL_ALL)
+ configure_package_config_file (glog-config.cmake.in
+   ${CMAKE_CURRENT_BINARY_DIR}/glog-config.cmake
+   INSTALL_DESTINATION ${_glog_CMake_INSTALLDIR}
+@@ -620,3 +621,4 @@ install (FILES
+ 
+ install (EXPORT glog-targets NAMESPACE glog:: DESTINATION
+   ${_glog_CMake_INSTALLDIR})
++endif()
