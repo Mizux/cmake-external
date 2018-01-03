@@ -3,6 +3,7 @@ project(FooApp VERSION 1.0.0 LANGUAGES CXX)
 file(GLOB _SRCS "src/*.[hc]pp")
 
 find_package(gflags REQUIRED)
+find_package(glog REQUIRED)
 find_package(ZLIB REQUIRED)
 find_package(Protobuf REQUIRED)
 
@@ -19,7 +20,7 @@ if(UNIX)
 endif()
 target_link_libraries(${PROJECT_NAME} PRIVATE
 	gflags
-	glog
+	glog::glog
 	ZLIB::ZLIB
 	protobuf::libprotobuf
 	#Cbc

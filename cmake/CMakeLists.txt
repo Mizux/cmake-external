@@ -51,7 +51,9 @@ if(result)
 endif()
 
 set(gflags_NAMESPACE "gflags" CACHE INTERNAL "Namespace for gflags")
-add_subdirectory(${CMAKE_BINARY_DIR}/glog-src ${CMAKE_BINARY_DIR}/glog-build
+add_subdirectory(
+	${CMAKE_BINARY_DIR}/glog-src
+	${CMAKE_BINARY_DIR}/glog-build
 	EXCLUDE_FROM_ALL)
 
 ############
