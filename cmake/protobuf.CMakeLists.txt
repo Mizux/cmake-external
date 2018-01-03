@@ -10,9 +10,10 @@ include(ExternalProject)
 ExternalProject_Add(protobuf_project
 	GIT_REPOSITORY https://github.com/google/protobuf
 	GIT_TAG "v3.5.0"
-	BUILD_IN_SOURCE 1
-	SOURCE_DIR "${CMAKE_BINARY_DIR}/protobuf"
+	SOURCE_DIR "${CMAKE_BINARY_DIR}/protobuf-src"
+	BINARY_DIR "${CMAKE_BINARY_DIR}/protobuf-build"
 	UPDATE_COMMAND ""
+	PATCH_COMMAND patch < "${CMAKE_SOURCE_DIR}/patches/protobuf.patch"
 	CONFIGURE_COMMAND ""
 	BUILD_COMMAND ""
 	INSTALL_COMMAND ""

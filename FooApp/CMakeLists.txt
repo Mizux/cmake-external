@@ -4,6 +4,8 @@ file(GLOB _SRCS "src/*.[hc]pp")
 
 find_package(gflags REQUIRED)
 find_package(ZLIB REQUIRED)
+find_package(Protobuf REQUIRED)
+
 add_executable(${PROJECT_NAME} ${_SRCS})
 if(UNIX)
 	if(NOT APPLE)
@@ -19,6 +21,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 	gflags
 	glog
 	ZLIB::ZLIB
+	protobuf::libprotobuf
 	#Cbc
 	)
 add_executable(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})

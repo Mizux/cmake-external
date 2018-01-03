@@ -2,7 +2,7 @@ set(BUILD_SHARED_LIBS OFF)
 set(BUILD_TESTING OFF)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_SKIP_INSTALL_RULES TRUE)
-set(SKIP_INSTALL_ALL ON)
+#set(SKIP_INSTALL_ALL ON)
 
 ##############
 ##  GFLAGS  ##
@@ -99,11 +99,12 @@ if(result)
   message(FATAL_ERROR "Build step for protobuf failed: ${result}")
 endif()
 
-#set(protobuf_BUILD_SHARED_LIBS OFF CACHE INTERNAL "Build Protobuf Shared Libraries")
-set(protobuf_BUILD_TESTS OFF CACHE INTERNAL "Build Protobuf tests")
+set(protobuf_BUILD_TESTS OFF CACHE INTERNAL "Disable Protobuf tests")
 # Zlib disable by default on MSVC...
-set(protobuf_WITH_ZLIB ON CACHE INTERNAL "Protobuf with zlib")
-add_subdirectory(${CMAKE_BINARY_DIR}/protobuf/cmake	${CMAKE_BINARY_DIR}/protobuf
+#set(protobuf_WITH_ZLIB ON CACHE INTERNAL "Protobuf with zlib")
+add_subdirectory(
+	${CMAKE_BINARY_DIR}/protobuf-src/cmake
+	${CMAKE_BINARY_DIR}/protobuf-build
 	EXCLUDE_FROM_ALL)
 
 ###############
