@@ -72,12 +72,10 @@ if(result)
   message(FATAL_ERROR "Build step for zlib failed: ${result}")
 endif()
 
-add_subdirectory(${CMAKE_BINARY_DIR}/zlib ${CMAKE_BINARY_DIR}/zlib
+add_subdirectory(
+	${CMAKE_BINARY_DIR}/zlib-src
+	${CMAKE_BINARY_DIR}/zlib-build
 	EXCLUDE_FROM_ALL)
-set_target_properties(zlibstatic PROPERTIES
-	INTERFACE_INCLUDE_DIRECTORIES	${CMAKE_BINARY_DIR}/zlib
-	VERSION "1.2.11")
-add_library(ZLIB ALIAS zlibstatic)
 
 ################
 ##  PROTOBUF  ##

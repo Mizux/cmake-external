@@ -2,6 +2,7 @@ project(FooApp VERSION 1.0.0 LANGUAGES CXX)
 
 file(GLOB _SRCS "src/*.[hc]pp")
 
+find_package(ZLIB REQUIRED)
 add_executable(${PROJECT_NAME} ${_SRCS})
 if(UNIX)
 	if(NOT APPLE)
@@ -16,7 +17,7 @@ endif()
 target_link_libraries(${PROJECT_NAME} PRIVATE
 	gflags
 	glog
-	zlibstatic
+	ZLIB::ZLIB
 	#Cbc
 	)
 add_executable(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
