@@ -25,7 +25,9 @@ if(result)
 endif()
 
 #set(GFLAGS_IS_SUBPROJECT TRUE)
-add_subdirectory(${CMAKE_BINARY_DIR}/gflags-src ${CMAKE_BINARY_DIR}/gflags-build
+add_subdirectory(
+	${CMAKE_BINARY_DIR}/gflags-src
+	${CMAKE_BINARY_DIR}/gflags-build
 	EXCLUDE_FROM_ALL)
 
 ############

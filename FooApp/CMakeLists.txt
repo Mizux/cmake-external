@@ -2,6 +2,7 @@ project(FooApp VERSION 1.0.0 LANGUAGES CXX)
 
 file(GLOB _SRCS "src/*.[hc]pp")
 
+find_package(gflags REQUIRED)
 find_package(ZLIB REQUIRED)
 add_executable(${PROJECT_NAME} ${_SRCS})
 if(UNIX)
