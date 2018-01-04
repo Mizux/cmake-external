@@ -1,6 +1,10 @@
 set(BUILD_SHARED_LIBS OFF)
 set(BUILD_TESTING OFF)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+# Backup the value of CMAKE_SKIP_INSTALL_RULES
+set(_SKIP_INSTALL ${CMAKE_SKIP_INSTALL_RULES})
+# TODO Keep install rules of dependencies (and adapt them if needed)
 set(CMAKE_SKIP_INSTALL_RULES TRUE)
 
 ##############
@@ -100,6 +104,7 @@ if(result)
   message(FATAL_ERROR "Build step for protobuf failed: ${result}")
 endif()
 
+set(protobuf_BUILD_TESTS OFF CACHE INTERNAL "Disable Protobuf tests")
 add_subdirectory(
 	${CMAKE_BINARY_DIR}/protobuf-src/cmake
 	${CMAKE_BINARY_DIR}/protobuf-build
@@ -121,3 +126,5 @@ foreach(DEPENDENCY Cbc CoinUtils Osi Clp Cgl)
 endforeach()
 
 #include(Cbc)
+
+set(CMAKE_SKIP_INSTALL_RULES ${_SKIP_INSTALL})
