@@ -12,19 +12,26 @@ This project should run on Linux, Mac and Windows.
 To complexify a little, the CMake project is composed of one executable (FooApp)
 with the following dependencies:  
 ```sh
-FooApp: zlib gflags glog protobuf Cbc
+gflags:
+glog: gflags
+zlib:
+protobuf: zlib
+FooApp: gflags glog zlib protobuf Cbc
 ```
-All dependencies are built in static to have one standalone executable.
+note 1:All dependencies are built in static to have one standalone executable.  
+note 2: Cbc is prebuilt (using autotools) then wrapped as Imported Target since it doesn't provide CMake support.
+note 3: Cbc is not available on Windows since github coin have broken vcproj (git repo add one directory level)
 ## Project directory layout
 Thus the project layout is as follow:
-```sh
+```
  CMakeLists.txt // meta CMake doing the orchestration and python packaging
  cmake
  ├── CMakeLists.txt
  ├── gflags.CMakeLists.txt
  ├── glog.CMakeLists.txt
+ ├── zlib.CMakeLists.txt
  ├── protobuf.CMakeLists.txt
- └── zlib.CMakeLists.txt
+ └── Cbc.cmake
  FooApp
  ├── CMakeLists.txt
  └── src
@@ -40,8 +47,10 @@ cmake --build build
 ## Build directory layout
 Since we want to use the [CMAKE_BINARY_DIR](https://cmake.org/cmake/help/latest/variable/CMAKE_BINARY_DIR.html) to generate the binary package.  
 We want this layout (tree build --prune -P "*.py|*.so"):
-```sh
+```
  FooApp
+ ├── test
+ |   └── FooApp_UT
  └── FooApp
 ```
 
