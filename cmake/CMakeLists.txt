@@ -10,6 +10,7 @@ set(CMAKE_SKIP_INSTALL_RULES TRUE)
 ##############
 ##  GFLAGS  ##
 ##############
+message(STATUS "Subproject: Gflag...")
 # Download and unpack gflags at configure time
 configure_file(
 	${CMAKE_CURRENT_SOURCE_DIR}/gflags.CMakeLists.txt
@@ -32,10 +33,12 @@ add_subdirectory(
 	${CMAKE_BINARY_DIR}/gflags-src
 	${CMAKE_BINARY_DIR}/gflags-build
 	EXCLUDE_FROM_ALL)
+message(STATUS "Subproject: Gflag...DONE")
 
 ############
 ##  GLOG  ##
 ############
+message(STATUS "Subproject: Glog...")
 # Download and unpack glog at configure time
 configure_file(
 	${CMAKE_CURRENT_SOURCE_DIR}/glog.CMakeLists.txt
@@ -58,10 +61,12 @@ add_subdirectory(
 	${CMAKE_BINARY_DIR}/glog-src
 	${CMAKE_BINARY_DIR}/glog-build
 	EXCLUDE_FROM_ALL)
+message(STATUS "Subproject: Glog...DONE")
 
 ############
 ##  ZLIB  ##
 ############
+message(STATUS "Subproject: ZLIB...")
 # Download and unpack zlib at configure time
 configure_file(
 	${CMAKE_CURRENT_SOURCE_DIR}/zlib.CMakeLists.txt
@@ -83,10 +88,12 @@ add_subdirectory(
 	${CMAKE_BINARY_DIR}/zlib-src
 	${CMAKE_BINARY_DIR}/zlib-build
 	EXCLUDE_FROM_ALL)
+message(STATUS "Subproject: ZLIB...DONE")
 
 ################
 ##  PROTOBUF  ##
 ################
+message(STATUS "Subproject: Protobuf...")
 # Download and unpack protobuf at configure time
 configure_file(
 	${CMAKE_CURRENT_SOURCE_DIR}/protobuf.CMakeLists.txt
@@ -109,22 +116,33 @@ add_subdirectory(
 	${CMAKE_BINARY_DIR}/protobuf-src/cmake
 	${CMAKE_BINARY_DIR}/protobuf-build
 	EXCLUDE_FROM_ALL)
+message(STATUS "Subproject: Protobuf...DONE")
 
-###############
-##  COIN-OR  ##
-###############
-if(MSVC)
-    add_definitions(/bigobj /DNDEBUG /DUSE_GLOP /DUSE_BOP)
-else()
-    add_definitions(-fwrapv -DNDEBUG -DUSE_GLOP -DUSE_BOP)
+###################
+##  COIN-OR:CBC  ##
+###################
+message(STATUS "Subproject: COIN-OR:Cbc...")
+# Download and unpack cbc at configure time
+configure_file(
+	${CMAKE_CURRENT_SOURCE_DIR}/cbc.CMakeLists.txt
+	${CMAKE_BINARY_DIR}/cbc-download/CMakeLists.txt)
+execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
+  RESULT_VARIABLE result
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/cbc-download)
+if(result)
+  message(FATAL_ERROR "CMake step for cbc failed: ${result}")
+endif()
+execute_process(COMMAND ${CMAKE_COMMAND} --build .
+  RESULT_VARIABLE result
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/cbc-download)
+if(result)
+  message(FATAL_ERROR "Build step for cbc failed: ${result}")
 endif()
 
-# Find or build Dependencies
-file(READ ${CMAKE_CURRENT_SOURCE_DIR}/Dependencies.txt _Dependency_file)
-foreach(DEPENDENCY Cbc CoinUtils Osi Clp Cgl)
-    string(REGEX REPLACE ".*${DEPENDENCY} = ([0-9.]+).*" "\\1" ${DEPENDENCY}_VERSION ${_Dependency_file})
-endforeach()
-
-#include(Cbc)
+add_subdirectory(
+	${CMAKE_BINARY_DIR}/cbc-src
+	${CMAKE_BINARY_DIR}/cbc-build
+	EXCLUDE_FROM_ALL)
+message(STATUS "Subproject: COIN-OR:Cbc...DONE")
 
 set(CMAKE_SKIP_INSTALL_RULES ${_SKIP_INSTALL})
