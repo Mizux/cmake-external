@@ -22,8 +22,8 @@ macro(find_package)
 		set(${ARGV0}_FOUND TRUE)
 	endif()
 endmacro()
+# Apple: Don't modify install_name when touching RPATH.
 if(POLICY CMP0068)
-	# Don't modify install_name when touching RPATH.
 	cmake_policy(SET CMP0068 NEW)
 endif()
 
