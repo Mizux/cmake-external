@@ -1,0 +1,13 @@
+syntax = "proto3";
+package foo;
+
+// Foo represents a tuple {key, value}.
+message Foo {
+  string key = 1;
+  int32 value = 2;
+}
+
+// FooList represents a list of foo.
+message FooList {
+	repeated Foo foos = 1;
+}
