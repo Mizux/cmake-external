@@ -16,11 +16,10 @@ gflags:
 glog: gflags
 zlib:
 protobuf: zlib
-FooApp: gflags glog zlib protobuf Cbc
+FooApp: gflags glog zlib protobuf
 ```
-note 1:All dependencies are built in static to have one standalone executable.  
-note 2: Cbc is prebuilt (using autotools) then wrapped as Imported Target since it doesn't provide CMake support.
-note 3: Cbc is not available on Windows since github coin have broken vcproj (git repo add one directory level)
+note 1: All dependencies are built in static to have one standalone executable `FooApp`.  
+note 2: glog, zlib, protobuf need patches to be use as subproject.
 ## Project directory layout
 Thus the project layout is as follow:
 ```
@@ -31,7 +30,10 @@ Thus the project layout is as follow:
  ├── glog.CMakeLists.txt
  ├── zlib.CMakeLists.txt
  ├── protobuf.CMakeLists.txt
- └── Cbc.cmake
+ patches
+ ├── glog.patch
+ ├── zlib.patch
+ ├── protobuf.patch
  FooApp
  ├── CMakeLists.txt
  └── src
@@ -43,15 +45,23 @@ To build the C++ project, as usual:
 ```sh
 cmake -H. -Bbuild
 cmake --build build
+CTEST_OUTPUT_ON_FAILURE=1 cmake --build build --target test
 ```
 ## Build directory layout
 Since we want to use the [CMAKE_BINARY_DIR](https://cmake.org/cmake/help/latest/variable/CMAKE_BINARY_DIR.html) to generate the binary package.  
-We want this layout (tree build --prune -P "*.py|*.so"):
+We want this layout (tree build --prune -P "*.a|FooApp"):
 ```
- FooApp
- ├── test
- |   └── FooApp_UT
- └── FooApp
+build
+├── gflags-build
+│   └── libgflags_nothreads.a
+├── glog-build
+│   └── libglog.a
+├── zlib-build
+│   └── libz.a
+├── protobuf-build
+│   └── libprotobuf.a
+└── FooApp
+   └── FooApp
 ```
 
 # Contributing
