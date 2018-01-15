@@ -1,9 +1,10 @@
 #include <iostream>
+#include <cstdint>
+#include <fstream>
 #include <gflags/gflags.h>
 #include <glog/logging.h>
 #include <zlib.h>
 
-#include <fstream>
 #include "foo.pb.h"
 
 void AddFoo(foo::Foo* fooPtr, const std::string& key, std::int32_t value);

@@ -43,6 +43,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 	ZLIB::ZLIB
 	protobuf::libprotobuf
 	)
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_11)
 if(UNIX)
 	if(NOT APPLE)
 		set_target_properties(${PROJECT_NAME} PROPERTIES
