@@ -37,6 +37,8 @@ if(UNIX)
 else()
 	# only support for static build on Windows.
  set(BUILD_SHARED_LIBS OFF)
+ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
+ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
 endif()
 
 # Build Dependencies
