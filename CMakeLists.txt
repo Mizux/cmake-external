@@ -32,7 +32,6 @@ project(meta VERSION 1.0 LANGUAGES NONE)
 include(CTest)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 if(UNIX)
-  set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
   option(BUILD_SHARED_LIBS "Build shared libraries(.so)." ON)
 else()
 	# only support for static build on Windows.

@@ -4,7 +4,7 @@
 #include <iostream>
 
 namespace foo {
-  void hello() {
+  void helloWorld() {
 		LOG(INFO) << "foo::hello()";
   }
 

@@ -1,8 +1,5 @@
 #include <iostream>
-#include <cstdint>
-#include <fstream>
-#include <gflags/gflags.h>
-#include <glog/logging.h>
+#include <foo/Foo.hpp>
 
 int main(int argc, char** argv) {
 	FLAGS_logtostderr = true;
@@ -10,7 +7,7 @@ int main(int argc, char** argv) {
 	// Initialize Google's logging library.
   google::InitGoogleLogging(argv[0]);
 
-	LOG(INFO) << "Hello World !";
+	foo::helloWorld();
 
 	google::ShutdownGoogleLogging();
 

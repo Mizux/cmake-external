@@ -7,7 +7,7 @@
 #include <glog/logging.h>
 
 namespace foo {
-  void hello();
+  void helloWorld();
 
 	class Foo {
 		public:
