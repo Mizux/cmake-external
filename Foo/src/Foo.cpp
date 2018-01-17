@@ -5,11 +5,11 @@
 
 namespace foo {
   void hello() {
-    std::cout << "foo::hello" << std::endl;
+		LOG(INFO) << "foo::hello()";
   }
 
 void Foo::operator()() const {
-	std::cout << "Foo()" << std::endl;
+	LOG(INFO) << "foo::Foo()()";
 }
 }
 

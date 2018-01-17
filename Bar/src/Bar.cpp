@@ -4,11 +4,11 @@
 
 namespace bar {
   void world() {
-    std::cout << "bar::world" << std::endl;
+		LOG(INFO) << "bar::world()";
   }
 
 void Bar::operator()() const {
-	std::cout << "Bar()" << std::endl;
+	LOG(INFO) << "bar::Bar()()";
 }
 }
 

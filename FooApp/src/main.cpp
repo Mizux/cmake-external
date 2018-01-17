@@ -5,7 +5,14 @@
 #include <glog/logging.h>
 
 int main(int argc, char** argv) {
-	std::cout << "Hello World !" << std::endl;
+	FLAGS_logtostderr = true;
+	gflags::ParseCommandLineFlags(&argc, &argv, true);
+	// Initialize Google's logging library.
+  google::InitGoogleLogging(argv[0]);
+
+	LOG(INFO) << "Hello World !";
+
+	google::ShutdownGoogleLogging();
 
 	return 0;
 }
