@@ -1,0 +1,33 @@
+cmake_minimum_required(VERSION 3.8.2)
+project(Bar VERSION 1.0.0 LANGUAGES CXX)
+
+file(GLOB _HDRS "include/bar/*.hpp" "include/bar/*.hxx")
+file(GLOB _SRCS "src/*.[hc]pp")
+
+find_package(Foo REQUIRED)
+
+add_library(${PROJECT_NAME} SHARED ${_HDRS} ${_SRCS})
+target_include_directories(${PROJECT_NAME} PUBLIC
+	$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+	$<INSTALL_INTERFACE:include>)
+set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER ${_HDRS})
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_11)
+target_link_libraries(${PROJECT_NAME} PUBLIC Foo::Foo)
+add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+
+# Install
+include(GNUInstallDirs)
+install(TARGETS ${PROJECT_NAME}
+	EXPORT ${PROJECT_NAME}Targets
+	INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+	PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/bar
+	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+	#RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+	)
+#[[
+install(EXPORT ${PROJECT_NAME}Targets
+	NAMESPACE ${PROJECT_NAME}::
+	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+	)
+]]
