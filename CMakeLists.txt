@@ -44,4 +44,4 @@ add_subdirectory(cmake)
 add_subdirectory(Foo)
 add_subdirectory(FooApp)
 
-#add_subdirectory(Bar)
+add_subdirectory(Bar)
