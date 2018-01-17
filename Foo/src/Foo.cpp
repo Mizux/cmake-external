@@ -1,6 +1,5 @@
 #include <foo/Foo.hpp>
 #include <gflags/gflags.h>
-#include <glog/logging.h>
 
 #include <iostream>
 

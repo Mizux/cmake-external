@@ -7,7 +7,7 @@ file(GLOB _SRCS "src/*.[hc]pp")
 find_package(gflags REQUIRED)
 find_package(glog REQUIRED)
 
-add_library(${PROJECT_NAME} ${_HDRS} ${_SRCS})
+add_library(${PROJECT_NAME} STATIC ${_HDRS} ${_SRCS})
 target_include_directories(${PROJECT_NAME} PUBLIC
 	$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
 	$<INSTALL_INTERFACE:include>)
