@@ -1,11 +1,14 @@
 # This file is just an orchestration
 cmake_minimum_required(VERSION 3.8.2)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
+# Force default build type to Release
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release" CACHE STRING
 		"Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel."
 		FORCE)
 endif(NOT CMAKE_BUILD_TYPE)
+
 # Use find_package everywhere, no-op if it's a target
 macro(find_package)
 	if(NOT TARGET ${ARGV0} AND NOT TARGET ${ARGV0}::${ARGV0})
@@ -22,6 +25,7 @@ macro(find_package)
 		set(${ARGV0}_FOUND TRUE)
 	endif()
 endmacro()
+
 # Apple: Don't modify install_name when touching RPATH.
 if(POLICY CMP0068)
 	cmake_policy(SET CMP0068 NEW)
