@@ -2,11 +2,6 @@ set(BUILD_SHARED_LIBS OFF)
 set(BUILD_TESTING OFF)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-# Backup the value of CMAKE_SKIP_INSTALL_RULES
-set(_SKIP_INSTALL ${CMAKE_SKIP_INSTALL_RULES})
-# TODO Keep install rules of dependencies (and adapt them if needed)
-set(CMAKE_SKIP_INSTALL_RULES TRUE)
-
 ##############
 ##  GFLAGS  ##
 ##############
@@ -28,12 +23,13 @@ if(result)
   message(FATAL_ERROR "Build step for gflags failed: ${result}")
 endif()
 
-set(GFLAGS_NAMESPACE "gflags" CACHE INTERNAL "Namespace for gflags")
+set(GFLAGS_NAMESPACE "gflags")
+set(GFLAGS_INSTALL_STATIC_LIBS ON)
+set(GFLAGS_INSTALL_HEADERS ON)
 #set(GFLAGS_IS_SUBPROJECT TRUE)
 add_subdirectory(
 	${CMAKE_BINARY_DIR}/gflags-src
-	${CMAKE_BINARY_DIR}/gflags-build
-	EXCLUDE_FROM_ALL)
+	${CMAKE_BINARY_DIR}/gflags-build)
 message(STATUS "Subproject: Gflag...DONE")
 
 ############
@@ -60,8 +56,5 @@ endif()
 set(gflags_NAMESPACE "gflags" CACHE INTERNAL "Namespace for gflags")
 add_subdirectory(
 	${CMAKE_BINARY_DIR}/glog-src
-	${CMAKE_BINARY_DIR}/glog-build
-	EXCLUDE_FROM_ALL)
+	${CMAKE_BINARY_DIR}/glog-build)
 message(STATUS "Subproject: Glog...DONE")
-
-set(CMAKE_SKIP_INSTALL_RULES ${_SKIP_INSTALL})
