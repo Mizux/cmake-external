@@ -11,20 +11,20 @@ add_library(${PROJECT_NAME}_obj OBJECT ${_HDRS} ${_SRCS})
 target_include_directories(${PROJECT_NAME}_obj PRIVATE
 	$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
 	$<INSTALL_INTERFACE:include>
-	$<TARGET_PROPERTY:gflags,INTERFACE_INCLUDE_DIRECTORIES>
+	$<TARGET_PROPERTY:gflags::gflags,INTERFACE_INCLUDE_DIRECTORIES>
 	$<TARGET_PROPERTY:glog::glog,INTERFACE_INCLUDE_DIRECTORIES>
 )
-#target_compile_options(${PROJECT_NAME}_obj PRIVATE
-#	$<TARGET_PROPERTY:gflags,INTERFACE_COMPILE_OPTIONS>
-#	$<TARGET_PROPERTY:glog::glog,INTERFACE_COMPILE_OPTIONS>
-#	)
-#target_compile_definitions(${PROJECT_NAME}_obj PRIVATE
-#	$<TARGET_PROPERTY:gflags,INTERFACE_COMPILE_DEFINITIONS>
-#	$<TARGET_PROPERTY:glog::glog,INTERFACE_COMPILE_DEFINITIONS>
-#	)
+target_compile_options(${PROJECT_NAME}_obj PRIVATE
+	$<TARGET_PROPERTY:gflags::gflags,INTERFACE_COMPILE_OPTIONS>
+	$<TARGET_PROPERTY:glog::glog,INTERFACE_COMPILE_OPTIONS>
+	)
+target_compile_definitions(${PROJECT_NAME}_obj PRIVATE
+	$<TARGET_PROPERTY:gflags::gflags,INTERFACE_COMPILE_DEFINITIONS>
+	$<TARGET_PROPERTY:glog::glog,INTERFACE_COMPILE_DEFINITIONS>
+	)
 target_compile_features(${PROJECT_NAME}_obj PUBLIC cxx_std_11)
 # CMakeError: Object library may not link to anything.
-#target_link_libraries(${PROJECT_NAME}_obj PUBLIC gflags	glog::glog)
+#target_link_libraries(${PROJECT_NAME}_obj PUBLIC gflags::gflags glog::glog)
 
 add_library(${PROJECT_NAME} STATIC "")
 target_include_directories(${PROJECT_NAME} PUBLIC
@@ -33,7 +33,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 	)
 target_sources(${PROJECT_NAME} PRIVATE $<TARGET_OBJECTS:${PROJECT_NAME}_obj>)
 set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER ${_HDRS})
-target_link_libraries(${PROJECT_NAME} PUBLIC gflags	glog::glog)
+target_link_libraries(${PROJECT_NAME} PUBLIC gflags::gflags	glog::glog)
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 # Install
