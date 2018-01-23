@@ -9,7 +9,7 @@ find_package(ZLIB REQUIRED)
 find_package(Protobuf REQUIRED)
 find_package(Foo REQUIRED)
 
-# Generate Protobuf cpp sources
+# Generate Protobuf cpp sources from .proto file(s)
 set(PROTO_HDRS)
 set(PROTO_SRCS)
 file(GLOB_RECURSE proto_files RELATIVE ${PROJECT_SOURCE_DIR} "*.proto")
