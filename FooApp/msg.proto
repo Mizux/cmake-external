@@ -1,0 +1,13 @@
+syntax = "proto3";
+package msg;
+
+// Msg represents a tuple {key, value}.
+message Msg {
+  string key = 1;
+  int32 value = 2;
+}
+
+// MsgList represents a list of msg.
+message MsgList {
+	repeated Msg msgs = 1;
+}

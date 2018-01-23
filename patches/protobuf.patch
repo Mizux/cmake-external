@@ -1,3 +1,27 @@
+diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
+index f159f60e..98774e6b 100644
+--- a/cmake/CMakeLists.txt
++++ b/cmake/CMakeLists.txt
+@@ -8,6 +8,10 @@ endif()
+ # CMake policies
+ cmake_policy(SET CMP0022 NEW)
+ 
++if (POLICY CMP0048)
++  cmake_policy (SET CMP0048 NEW)
++endif ()
++
+ # Project
+ project(protobuf C CXX)
+ 
+@@ -157,7 +161,7 @@ if (MSVC)
+   string(REPLACE "/" "\\" PROTOBUF_SOURCE_WIN32_PATH ${protobuf_SOURCE_DIR})
+   string(REPLACE "/" "\\" PROTOBUF_BINARY_WIN32_PATH ${protobuf_BINARY_DIR})
+   configure_file(extract_includes.bat.in extract_includes.bat)
+-  
++
+   # Suppress linker warnings about files with no symbols defined.
+   set(CMAKE_STATIC_LINKER_FLAGS /ignore:4221)
+ endif (MSVC)
 diff --git a/cmake/install.cmake b/cmake/install.cmake
 index 441bf553..2e7695ec 100644
 --- a/cmake/install.cmake
