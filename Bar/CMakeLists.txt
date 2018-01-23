@@ -10,7 +10,10 @@ add_library(${PROJECT_NAME} SHARED ${_HDRS} ${_SRCS})
 target_include_directories(${PROJECT_NAME} PUBLIC
 	$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
 	$<INSTALL_INTERFACE:include>)
-set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER ${_HDRS})
+set_target_properties(${PROJECT_NAME} PROPERTIES
+	PUBLIC_HEADER ${_HDRS}
+	VERSION ${PROJECT_VERSION}
+	SOVERSION ${PROJECT_VERSION_MAJOR})
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_11)
 target_link_libraries(${PROJECT_NAME} PUBLIC Foo::Foo)
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})

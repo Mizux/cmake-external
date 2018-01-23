@@ -32,7 +32,10 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 	$<INSTALL_INTERFACE:include>
 	)
 target_sources(${PROJECT_NAME} PRIVATE $<TARGET_OBJECTS:${PROJECT_NAME}_obj>)
-set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER ${_HDRS})
+set_target_properties(${PROJECT_NAME} PROPERTIES
+	PUBLIC_HEADER ${_HDRS}
+	VERSION ${PROJECT_VERSION}
+	SOVERSION ${PROJECT_VERSION_MAJOR})
 target_link_libraries(${PROJECT_NAME} PUBLIC gflags::gflags	glog::glog)
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
