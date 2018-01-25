@@ -66,6 +66,6 @@ write_basic_package_version_file(
 install(
 	FILES
 	"${PROJECT_BINARY_DIR}/SampleConfig.cmake"
-	"${PROJECT_BINARY_DIR}/SanpleConfigVersion.cmake"
+	"${PROJECT_BINARY_DIR}/SampleConfigVersion.cmake"
 	DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/Sample"
 	COMPONENT Devel)
