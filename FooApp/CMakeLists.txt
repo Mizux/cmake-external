@@ -66,7 +66,7 @@ if(BUILD_TESTING)
 endif()
 
 # Install
-include(GNUInstallDirs)
 install(TARGETS ${PROJECT_NAME}
+	EXPORT SampleTargets
 	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 	)

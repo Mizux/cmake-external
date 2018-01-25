@@ -1,0 +1,10 @@
+## Cbc CMake configuration file
+
+include(CMakeFindDependencyMacro)
+
+find_dependency(ZLIB REQUIRED NO_MODULE)
+find_dependency(gflags REQUIRED NO_MODULE)
+find_dependency(glog REQUIRED NO_MODULE)
+find_dependency(Protobuf REQUIRED NO_MODULE)
+
+include("${CMAKE_CURRENT_LIST_DIR}/SampleTargets.cmake")

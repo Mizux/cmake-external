@@ -6,6 +6,8 @@ file(GLOB _SRCS "src/*.[hc]pp")
 
 find_package(gflags REQUIRED)
 find_package(glog REQUIRED)
+find_package(ZLIB REQUIRED)
+find_package(Protobuf REQUIRED)
 
 add_library(${PROJECT_NAME}_obj OBJECT ${_HDRS} ${_SRCS})
 target_include_directories(${PROJECT_NAME}_obj PRIVATE
@@ -36,13 +38,17 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 	PUBLIC_HEADER ${_HDRS}
 	VERSION ${PROJECT_VERSION}
 	SOVERSION ${PROJECT_VERSION_MAJOR})
-target_link_libraries(${PROJECT_NAME} PUBLIC gflags::gflags	glog::glog)
+target_link_libraries(${PROJECT_NAME} PUBLIC
+	gflags::gflags
+	glog::glog
+	ZLIB::ZLIB
+	protobuf::libprotobuf
+	)
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 # Install
-include(GNUInstallDirs)
 install(TARGETS ${PROJECT_NAME}
-	INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+	EXPORT SampleTargets
 	PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/foo
 	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
