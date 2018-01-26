@@ -55,7 +55,7 @@ install(EXPORT SampleTargets
 	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Sample
 	COMPONENT Devel)
 include(CMakePackageConfigHelpers)
-configure_package_config_file(SampleConfig.cmake.in
+configure_package_config_file(cmake/SampleConfig.cmake.in
 	"${PROJECT_BINARY_DIR}/SampleConfig.cmake"
 	INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/Sample"
 	NO_SET_AND_CHECK_MACRO
