@@ -1,3 +1,5 @@
+*.tar
 *.swp
 .vs/
 build/
+build-*
