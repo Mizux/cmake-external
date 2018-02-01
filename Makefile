@@ -107,7 +107,7 @@ test_install_archlinux: test_install-archlinux
 test_install_ubuntu: test_install-ubuntu
 test_install-%: build/%/docker_install.tar
 	@docker load -i $<
-	${DOCKER_INSTALL_CMD} ${PROJECT}_$*:install /bin/sh -c "FooBarApp"
+	${DOCKER_INSTALL_CMD} ${PROJECT}_$*:install /bin/sh -c "FooApp"
 	${DOCKER_INSTALL_CMD} -w /project ${PROJECT}_$*:install /bin/sh -c "cmake -H. -Bbuild; cmake --build build"
 
 # CLEAN
