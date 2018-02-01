@@ -4,8 +4,6 @@ project(Bar VERSION 1.0.0 LANGUAGES CXX)
 file(GLOB _HDRS "include/bar/*.hpp" "include/bar/*.hxx")
 file(GLOB _SRCS "src/*.[hc]pp")
 
-find_package(Foo REQUIRED)
-
 add_library(${PROJECT_NAME} SHARED ${_HDRS} ${_SRCS})
 target_include_directories(${PROJECT_NAME} PUBLIC
 	$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
@@ -15,12 +13,12 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 	VERSION ${PROJECT_VERSION}
 	SOVERSION ${PROJECT_VERSION_MAJOR})
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_11)
-target_link_libraries(${PROJECT_NAME} PUBLIC Foo::Foo)
-add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+target_link_libraries(${PROJECT_NAME} PUBLIC CMakeExternal::Foo)
+add_library(CMakeExternal::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 # Install
 install(TARGETS ${PROJECT_NAME}
-	EXPORT SampleTargets
+	EXPORT CMakeExternalTargets
 	PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/bar
 	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}

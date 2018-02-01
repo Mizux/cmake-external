@@ -7,7 +7,6 @@ find_package(gflags REQUIRED)
 find_package(glog REQUIRED)
 find_package(ZLIB REQUIRED)
 find_package(Protobuf REQUIRED)
-find_package(Foo REQUIRED)
 
 # Generate Protobuf cpp sources from .proto file(s)
 set(PROTO_HDRS)
@@ -44,7 +43,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 	glog::glog
 	ZLIB::ZLIB
 	protobuf::libprotobuf
-  Foo::Foo
+	CMakeExternal::Foo
 	)
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_11)
 if(UNIX)
@@ -57,7 +56,7 @@ if(UNIX)
 			"@loader_path/../lib")
 	endif()
 endif()
-add_executable(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+add_executable(CMakeExternal::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 # Test
 include(CTest)
@@ -67,6 +66,6 @@ endif()
 
 # Install
 install(TARGETS ${PROJECT_NAME}
-	EXPORT SampleTargets
+	EXPORT CMakeExternalTargets
 	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 	)

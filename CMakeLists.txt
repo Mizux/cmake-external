@@ -2,6 +2,11 @@
 cmake_minimum_required(VERSION 3.8.2)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
+# Apple: Don't modify install_name when touching RPATH.
+if(POLICY CMP0068)
+	cmake_policy(SET CMP0068 NEW)
+endif()
+
 # Force default build type to Release
 set(CMAKE_BUILD_TYPE "Release" CACHE STRING
 	"Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel.")
@@ -22,11 +27,6 @@ macro(find_package)
 		set(${ARGV0}_FOUND TRUE)
 	endif()
 endmacro()
-
-# Apple: Don't modify install_name when touching RPATH.
-if(POLICY CMP0068)
-	cmake_policy(SET CMP0068 NEW)
-endif()
 
 project(meta VERSION 1.0 LANGUAGES NONE)
 
@@ -50,22 +50,22 @@ add_subdirectory(FooApp)
 add_subdirectory(Bar)
 
 # Install
-install(EXPORT SampleTargets
-	NAMESPACE Sample::
-	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Sample
+install(EXPORT CMakeExternalTargets
+	NAMESPACE CMakeExternal::
+	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/CMakeExternal
 	COMPONENT Devel)
 include(CMakePackageConfigHelpers)
-configure_package_config_file(cmake/SampleConfig.cmake.in
-	"${PROJECT_BINARY_DIR}/SampleConfig.cmake"
-	INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/Sample"
+configure_package_config_file(cmake/CMakeExternalConfig.cmake.in
+	"${PROJECT_BINARY_DIR}/CMakeExternalConfig.cmake"
+	INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/CMakeExternal"
 	NO_SET_AND_CHECK_MACRO
   NO_CHECK_REQUIRED_COMPONENTS_MACRO)
 write_basic_package_version_file(
-	"${PROJECT_BINARY_DIR}/SampleConfigVersion.cmake"
+	"${PROJECT_BINARY_DIR}/CMakeExternalConfigVersion.cmake"
 	COMPATIBILITY SameMajorVersion)
 install(
 	FILES
-	"${PROJECT_BINARY_DIR}/SampleConfig.cmake"
-	"${PROJECT_BINARY_DIR}/SampleConfigVersion.cmake"
-	DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/Sample"
+	"${PROJECT_BINARY_DIR}/CMakeExternalConfig.cmake"
+	"${PROJECT_BINARY_DIR}/CMakeExternalConfigVersion.cmake"
+	DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/CMakeExternal"
 	COMPONENT Devel)
