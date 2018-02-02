@@ -50,7 +50,7 @@ configure: configure_alpine configure_archlinux configure_ubuntu
 configure_alpine: configure-alpine
 configure_archlinux: configure-archlinux
 configure_ubuntu: configure-ubuntu
-configure-%: build/%/docker_devel.tar
+configure-%: build/%/docker_devel.tar CMakeLists.txt cmake patches
 	@docker load -i $<
 	${DOCKER_CMD} ${PROJECT}_$*:devel /bin/sh -c "cmake -H. -Bbuild/$*"
 
