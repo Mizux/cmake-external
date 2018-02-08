@@ -1,4 +1,4 @@
-FROM ubuntu:devel
+FROM ubuntu:latest
 LABEL maintainer="corentinl@google.com"
 
 ADD setup.sh .
