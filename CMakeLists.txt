@@ -33,6 +33,7 @@ project(meta VERSION 1.0 LANGUAGES NONE)
 include(CTest)
 include(GNUInstallDirs)
 set(CMAKE_VERBOSE_MAKEFILE ON)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 if(UNIX)
   option(BUILD_SHARED_LIBS "Build shared libraries(.so)." ON)
