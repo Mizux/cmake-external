@@ -2,4 +2,4 @@
 *.swp
 .vs/
 build/
-build-*
+cache/
