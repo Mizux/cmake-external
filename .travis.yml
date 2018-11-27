@@ -17,10 +17,10 @@ before_install:
   - eval "${MATRIX_EVAL}"
   - if [ $TRAVIS_OS_NAME == linux ]; then sudo apt-get -qq update; fi
 
-  - if [ $TRAVIS_OS_NAME == osx ]; then sudo chown -R $(whoami) /usr/local; fi
-    # work around https://github.com/travis-ci/travis-ci/issues/8552
   - if [ $TRAVIS_OS_NAME == osx ]; then brew update; fi
-
+  # see https://github.com/travis-ci/travis-ci/issues/10275
+  - if [ $TRAVIS_OS_NAME == osx ]; then brew install gcc || brew link --overwrite gcc; fi
+  - if [ $TRAVIS_OS_NAME == osx ]; then brew install make --with-defaults-names; fi
 
 script:
   - cmake --version
