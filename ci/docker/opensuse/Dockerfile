@@ -5,7 +5,7 @@ LABEL maintainer="corentinl@google.com"
 # Install system build dependencies
 ENV PATH=$PATH:/usr/local/bin
 RUN zypper up -y \
-&& zypper install -y git gcc gcc-c++ cmake \
+&& zypper install -y git patch gcc gcc-c++ cmake \
 && zypper clean -a
 
 ENV CC=gcc CXX=g++

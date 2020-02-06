@@ -1,8 +1,8 @@
 #include <iostream>
-#include <foobar/FooBar.hpp>
+#include <foo/Foo.hpp>
 
 int main(int argc, char** argv) {
-  foobar::hello();
+  foo::helloWorld();
 	return 0;
 }
 
