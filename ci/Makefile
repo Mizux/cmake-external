@@ -97,7 +97,7 @@ cache/%/docker_env.tar: docker/%/Dockerfile
 targets = $(addprefix sh_env_, $(DISTROS))
 .PHONY: $(targets)
 $(targets): sh_env_%: cache/%/docker_env.tar
-	${DOCKER_RUN_CMD} -it --name ${IMAGE}_$* ${IMAGE}_$*:env /bin/sh
+	${DOCKER_RUN_CMD} -it --name ${IMAGE}_$* ${IMAGE}_$*:env
 
 # DEVEL
 targets = $(addprefix devel_, $(DISTROS))
@@ -116,7 +116,7 @@ cache/%/docker_devel.tar: docker/%/Dockerfile \
 targets = $(addprefix sh_devel_, $(DISTROS))
 .PHONY: $(targets)
 $(targets): sh_devel_%: cache/%/docker_devel.tar
-	${DOCKER_RUN_CMD} -it --name ${IMAGE}_$* ${IMAGE}_$*:devel /bin/sh
+	${DOCKER_RUN_CMD} -it --name ${IMAGE}_$* ${IMAGE}_$*:devel
 
 # TEST DEVEL
 targets = $(addprefix test_, $(DISTROS))
@@ -142,7 +142,7 @@ cache/%/docker_install.tar: docker/%/Dockerfile \
 targets = $(addprefix sh_install_, $(DISTROS))
 .PHONY: $(targets)
 $(targets): sh_install_%: cache/%/docker_install.tar
-	${DOCKER_RUN_CMD} -it --name ${IMAGE}_$* ${IMAGE}_$*:install /bin/sh
+	${DOCKER_RUN_CMD} -it --name ${IMAGE}_$* ${IMAGE}_$*:install
 
 # TEST INSTALL
 targets = $(addprefix test_install_, $(DISTROS))
