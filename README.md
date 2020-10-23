@@ -1,3 +1,4 @@
+![C++ CI](https://github.com/Mizux/cmake-external/workflows/C++%20CI/badge.svg?branch=master)
 [![Build Status](https://travis-ci.com/Mizux/cmake-external.svg?branch=master)](https://travis-ci.com/Mizux/cmake-external)
 [![Build status](https://ci.appveyor.com/api/projects/status/j569d0cnv2fktecn/branch/master?svg=true)](https://ci.appveyor.com/project/Mizux/cmake-external/branch/master)
 
