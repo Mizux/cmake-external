@@ -17,32 +17,35 @@ help:
 	@echo -e "${BOLD}MAKE TARGETS${RESET}"
 	@echo -e "\t${BOLD}help${RESET}: display this help and exit."
 	@echo
-	@echo -e "\t${BOLD}env${RESET}: build a virtual env image."
-	@echo -e "\t${BOLD}sh_env_<distro>${RESET}: run a container using the virtual env image (debug purpose)."
+	@echo -e "\t${BOLD}<stage>${RESET}: build <stage> docker images for ALL DISTROS."
+	@echo -e "\t${BOLD}<distro>_<stage>${RESET}: build <stage> docker image for a specific distro."
+	@echo -e "\t${BOLD}save_<stage>${RESET}: Save <stage> docker images for ALL DISTROS."
+	@echo -e "\t${BOLD}save_<distro>_<stage>${RESET}: Save the <stage> docker image for a specific distro."
+	@echo -e "\t${BOLD}sh_<distro>_<stage>${RESET}: run a container using the <stage> docker image specified (debug purpose)."
 	@echo
-	@echo -e "\t${BOLD}devel${RESET}: build the library using all devel images."
-	@echo -e "\t${BOLD}devel_<distro>${RESET}: build the library using a specific devel image."
-	@echo -e "\t${BOLD}test_<distro>${RESET}: auto test using the devel image."
-	@echo -e "\t${BOLD}sh_<distro>${RESET}: run a container using the devel image (debug purpose)."
+	@echo -e "\tWith ${BOLD}<distro>${RESET}:"
+	@echo -e "\t\t${BOLD}alpine${RESET} (edge)"
+	@echo -e "\t\t${BOLD}archlinux${RESET} (latest)"
+	@echo -e "\t\t${BOLD}centos${RESET} (latest)"
+	@echo -e "\t\t${BOLD}debian${RESET} (latest)"
+	@echo -e "\t\t${BOLD}fedora${RESET} (latest)"
+	@echo -e "\t\t${BOLD}opensuse${RESET} (tumbleweed)"
+	@echo -e "\t\t${BOLD}ubuntu${RESET} (rolling)"
+	@echo -e "\te.g. 'make test_ubuntu'"
 	@echo
-	@echo -e "\t${BOLD}install${RESET}: execute the cmake target ${BOLD}install${RESET} using all devel image container, then create an install image with it."
-	@echo -e "\t${BOLD}install_<distro>${RESET}: execute the cmake target ${BOLD}install${RESET} using the devel image container specified, then create an install image with it."
-	@echo -e "\t${BOLD}test_install${RESET}: configure, build, install then test a sample project against it using all ${BOLD}install${RESET} image containers."
-	@echo -e "\t${BOLD}test_install_<distro>${RESET}: configure, build, install then test a sample project against it using the ${BOLD}install${RESET} image container specified."
-	@echo -e "\t${BOLD}sh_install_<distro>${RESET}: run a container using the install image (debug purpose)."
+	@echo -e "\tWith ${BOLD}<stage>${RESET}:"
+	@echo -e "\t\t${BOLD}env${RESET}"
+	@echo -e "\t\t${BOLD}devel${RESET}"
+	@echo -e "\t\t${BOLD}build${RESET}"
+	@echo -e "\t\t${BOLD}test${RESET}"
+	@echo -e "\t\t${BOLD}install_env${RESET}"
+	@echo -e "\t\t${BOLD}install_devel${RESET}"
+	@echo -e "\t\t${BOLD}install_build${RESET}"
+	@echo -e "\t\t${BOLD}install_test${RESET}"
+	@echo -e "\te.g. 'make build'"
 	@echo
 	@echo -e "\t${BOLD}clean${RESET}: Remove cache and docker image."
 	@echo -e "\t${BOLD}clean_<distro>${RESET}: Remove cache and docker image for the specified distro."
-	@echo
-	@echo -e "\t${BOLD}<distro>${RESET}:"
-	@echo -e "\t\t${BOLD}alpine${RESET} (latest)"
-	@echo -e "\t\t${BOLD}archlinux${RESET} (latest)"
-	@echo -e "\t\t${BOLD}centos${RESET} (latest)"
-	@echo -e "\t\t${BOLD}fedora${RESET} (latest)"
-	@echo -e "\t\t${BOLD}opensuse${RESET} (tumbleweed)"
-	@echo -e "\t\t${BOLD}debian${RESET} (latest)"
-	@echo -e "\t\t${BOLD}ubuntu${RESET} (latest)"
-	@echo -e "\te.g. 'make test_ubuntu'"
 	@echo
 	@echo -e "\t${BOLD}NOCACHE=1${RESET}: use 'docker build --no-cache' when building container (default use cache)."
 	@echo
@@ -52,7 +55,7 @@ help:
 # Need to add cmd_distro to PHONY otherwise target are ignored since they do not
 # contain recipe (using FORCE do not work here)
 .PHONY: all
-all: devel
+all: build
 
 # Delete all implicit rules to speed up makefile
 MAKEFLAGS += --no-builtin-rules
@@ -75,101 +78,61 @@ endif
 DOCKER_RUN_CMD := docker run --rm --init --net=host
 
 # Currently supported distro
-DISTROS = alpine archlinux centos fedora opensuse debian ubuntu
+DISTROS = alpine archlinux centos debian fedora opensuse ubuntu
 
 # $* stem
 # $< first prerequist
 # $@ target name
 
-# ENV
-targets = $(addprefix env_, $(DISTROS))
-.PHONY: env $(targets)
-env: $(targets)
-$(targets): env_%: cache/%/docker_env.tar
-cache/%/docker_env.tar: docker/%/Dockerfile
-	@docker image rm -f ${IMAGE}_$*:env 2>/dev/null
-	${DOCKER_BUILD_CMD} --target=env --tag ${IMAGE}_$*:env -f $< docker/$*
-	@rm -f $@
-	mkdir -p cache/$*
-	docker save ${IMAGE}_$*:env -o $@
+############
+## STAGES ##
+############
+STAGES = env devel build test install_env install_devel install_build install_test
+define make-stage-target =
+#$$(info STAGE: $1)
+#$$(info Create targets: $1 $(addsuffix _$1, $(DISTROS)).)
+targets_$1 = $(addsuffix _$1, $(DISTROS))
+.PHONY: $1 $$(targets_$1)
+$1: $$(targets_$1)
+$$(targets_$1): %_$1: docker/%/Dockerfile
+	#@docker image rm -f ${IMAGE}:$$*_$1 2>/dev/null
+	${DOCKER_BUILD_CMD} --target=$1 --tag ${IMAGE}:$$*_$1 -f $$< ..
 
-# Run a container using the env image.
-targets = $(addprefix sh_env_, $(DISTROS))
-.PHONY: $(targets)
-$(targets): sh_env_%: cache/%/docker_env.tar
-	${DOCKER_RUN_CMD} -it --name ${IMAGE}_$* ${IMAGE}_$*:env
+#$$(info Create targets: save_$1 $(addprefix save_, $(addsuffix _$1, $(DISTROS))) (debug).)
+save_targets_$1 = $(addprefix save_, $(addsuffix _$1, $(DISTROS)))
+.PHONY: save_$1 $$(save_targets_$1)
+save_$1: $$(save_targets_$1)
+$$(save_targets_$1): save_%_$1: cache/%/docker_$1.tar
+cache/%/docker_$1.tar: %_$1
+	@rm -f $$@
+	mkdir -p cache/$$*
+	docker save ${IMAGE}:$$*_$1 -o $$@
 
-# DEVEL
-targets = $(addprefix devel_, $(DISTROS))
-.PHONY: devel $(targets)
-devel: $(targets)
-$(targets): devel_%: cache/%/docker_devel.tar
-cache/%/docker_devel.tar: docker/%/Dockerfile \
- ../CMakeLists.txt ../cmake
-	@docker image rm -f ${IMAGE}_$*:devel 2>/dev/null
-	${DOCKER_BUILD_CMD} --target=devel --tag ${IMAGE}_$*:devel -f $< ..
-	@rm -f $@
-	mkdir -p cache/$*
-	docker save ${IMAGE}_$*:devel -o $@
+#$$(info Create targets: $(addprefix sh_, $(addsuffix _$1, $(DISTROS))) (debug).)
+sh_targets_$1 = $(addprefix sh_, $(addsuffix _$1, $(DISTROS)))
+.PHONY: $$(sh_targets_$1)
+$$(sh_targets_$1): sh_%_$1: %_$1
+	${DOCKER_RUN_CMD} -it --name ${PROJECT}_${BUILD_SYSTEM}_$$*_$1 ${IMAGE}:$$*_$1
 
-# DOCKER BASH INSTALL (debug)
-targets = $(addprefix sh_devel_, $(DISTROS))
-.PHONY: $(targets)
-$(targets): sh_devel_%: cache/%/docker_devel.tar
-	${DOCKER_RUN_CMD} -it --name ${IMAGE}_$* ${IMAGE}_$*:devel
+#$$(info Create targets: $(addprefix clean_, $(addsuffix _$1, $(DISTROS))).)
+clean_targets_$1 = $(addprefix clean_, $(addsuffix _$1, $(DISTROS)))
+.PHONY: clean_$1 $$(clean_targets_$1)
+clean_$1: $$(clean_targets_$1)
+$$(clean_targets_$1): clean_%_$1:
+	docker image rm -f ${IMAGE}:$$*_$1 2>/dev/null
+	rm -f cache/$$*/docker_$1.tar
+endef
 
-# TEST DEVEL
-targets = $(addprefix test_, $(DISTROS))
-.PHONY: test $(targets)
-test: $(targets)
-$(targets): test_%: cache/%/docker_devel.tar
-	${DOCKER_RUN_CMD} -t --name ${IMAGE}_$* ${IMAGE}_$*:devel cmake --build build --target test
-
-# INSTALL
-targets = $(addprefix install_, $(DISTROS))
-.PHONY: install $(targets)
-install: $(targets)
-$(targets): install_%: cache/%/docker_install.tar
-cache/%/docker_install.tar: docker/%/Dockerfile \
- sample
-	@docker image rm -f ${IMAGE}_$*:install 2>/dev/null
-	${DOCKER_BUILD_CMD} --target=install --tag ${IMAGE}_$*:install -f $< ..
-	@rm -f $@
-	mkdir -p cache/$*
-	docker save ${IMAGE}_$*:install -o $@
-
-# DOCKER BASH INSTALL (debug)
-targets = $(addprefix sh_install_, $(DISTROS))
-.PHONY: $(targets)
-$(targets): sh_install_%: cache/%/docker_install.tar
-	${DOCKER_RUN_CMD} -it --name ${IMAGE}_$* ${IMAGE}_$*:install
-
-# TEST INSTALL
-targets = $(addprefix test_install_, $(DISTROS))
-.PHONY: test_install $(targets)
-test_install: $(targets)
-$(targets): test_install_%: cache/%/docker_install.tar sample
-	@docker load -i cache/$*/docker_install.tar
-	${DOCKER_RUN_CMD} -t --name ${IMAGE}_$* ${IMAGE}_$*:install /bin/sh -c \
- "cmake -H. -Bbuild; \
- cmake --build build --target all; \
- cmake --build build --target test; \
- cmake --build build --target install"
+$(foreach stage,$(STAGES),$(eval $(call make-stage-target,$(stage))))
 
 # CLEAN
 targets = $(addprefix clean_, $(DISTROS))
 .PHONY: clean $(targets)
 clean: $(targets)
-	-rmdir cache
-$(targets): clean_%:
 	docker container prune -f
 	docker image prune -f
-	-docker image rm -f ${IMAGE}_$*:install 2>/dev/null
-	-docker image rm -f ${IMAGE}_$*:devel 2>/dev/null
-	-docker image rm -f ${IMAGE}_$*:env 2>/dev/null
-	-rm -f cache/$*/docker_install.tar
-	-rm -f cache/$*/docker_devel.tar
-	-rm -f cache/$*/docker_env.tar
+	-rmdir cache
+$(targets): clean_%: $(addprefix clean_%_, $(STAGES))
 	-rmdir cache/$*
 
 .PHONY: distclean

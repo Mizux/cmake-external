@@ -1,30 +1,35 @@
 # Create a virtual environment with all tools installed
 # ref: https://hub.docker.com/_/archlinux/
 FROM archlinux:latest AS env
-LABEL maintainer="corentinl@google.com"
+LABEL maintainer="mizux.dev@gmail.com"
 # Install system build dependencies
-ENV PATH=$PATH:/usr/local/bin
+ENV PATH=/usr/local/bin:$PATH
 RUN pacman -Syu --noconfirm git base-devel cmake
-
-CMD [ "/bin/sh" ]
 
 # Add the library src to our build env
 FROM env AS devel
-# Create lib directory
-WORKDIR /home/lib
-# Bundle lib source
+WORKDIR /home/project
 COPY . .
-# CMake configure
-RUN cmake -S. -Bbuild
-# CMake build
-RUN cmake --build build --target all -v
-# CMake build
-RUN cmake --build build --target install
 
-# Create an install image
-FROM env AS install
-# Copy lib from devel to prod
-COPY --from=devel /usr/local /usr/local/
-# Copy  sample
+FROM devel AS build
+RUN cmake -S. -Bbuild
+RUN cmake --build build --target all -v
+RUN cmake --build build --target install -v
+
+FROM build AS test
+RUN cmake --build build --target test
+
+# Test install rules
+FROM env AS install_env
+COPY --from=build /usr/local /usr/local/
+
+FROM install_env AS install_devel
 WORKDIR /home/sample
 COPY ci/sample .
+
+FROM install_devel AS install_build
+RUN cmake -S. -Bbuild
+RUN cmake --build build --target all -v
+
+FROM install_build AS install_test
+RUN cmake --build build --target test
