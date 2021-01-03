@@ -7,7 +7,6 @@ ENV PATH=/usr/local/bin:$PATH
 RUN zypper up -y \
 && zypper install -y git patch gcc gcc-c++ cmake \
 && zypper clean -a
-
 ENV CC=gcc CXX=g++
 
 # Add the library src to our build env
@@ -16,6 +15,7 @@ WORKDIR /home/project
 COPY . .
 
 FROM devel AS build
+RUN cmake -version
 RUN cmake -S. -Bbuild
 RUN cmake --build build --target all -v
 RUN cmake --build build --target install -v

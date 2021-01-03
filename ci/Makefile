@@ -23,16 +23,6 @@ help:
 	@echo -e "\t${BOLD}save_<distro>_<stage>${RESET}: Save the <stage> docker image for a specific distro."
 	@echo -e "\t${BOLD}sh_<distro>_<stage>${RESET}: run a container using the <stage> docker image specified (debug purpose)."
 	@echo
-	@echo -e "\tWith ${BOLD}<distro>${RESET}:"
-	@echo -e "\t\t${BOLD}alpine${RESET} (edge)"
-	@echo -e "\t\t${BOLD}archlinux${RESET} (latest)"
-	@echo -e "\t\t${BOLD}centos${RESET} (latest)"
-	@echo -e "\t\t${BOLD}debian${RESET} (latest)"
-	@echo -e "\t\t${BOLD}fedora${RESET} (latest)"
-	@echo -e "\t\t${BOLD}opensuse${RESET} (tumbleweed)"
-	@echo -e "\t\t${BOLD}ubuntu${RESET} (rolling)"
-	@echo -e "\te.g. 'make test_ubuntu'"
-	@echo
 	@echo -e "\tWith ${BOLD}<stage>${RESET}:"
 	@echo -e "\t\t${BOLD}env${RESET}"
 	@echo -e "\t\t${BOLD}devel${RESET}"
@@ -44,8 +34,18 @@ help:
 	@echo -e "\t\t${BOLD}install_test${RESET}"
 	@echo -e "\te.g. 'make build'"
 	@echo
-	@echo -e "\t${BOLD}clean${RESET}: Remove cache and docker image."
-	@echo -e "\t${BOLD}clean_<distro>${RESET}: Remove cache and docker image for the specified distro."
+	@echo -e "\tWith ${BOLD}<distro>${RESET}:"
+	@echo -e "\t\t${BOLD}alpine${RESET} (edge)"
+	@echo -e "\t\t${BOLD}archlinux${RESET} (latest)"
+	@echo -e "\t\t${BOLD}centos${RESET} (latest)"
+	@echo -e "\t\t${BOLD}debian${RESET} (latest)"
+	@echo -e "\t\t${BOLD}fedora${RESET} (latest)"
+	@echo -e "\t\t${BOLD}opensuse${RESET} (tumbleweed)"
+	@echo -e "\t\t${BOLD}ubuntu${RESET} (rolling)"
+	@echo -e "\te.g. 'make ubuntu_test'"
+	@echo
+	@echo -e "\t${BOLD}clean${RESET}: Remove cache and ALL docker images."
+	@echo -e "\t${BOLD}clean_<distro>${RESET}: Remove cache and docker images for the specified distro."
 	@echo
 	@echo -e "\t${BOLD}NOCACHE=1${RESET}: use 'docker build --no-cache' when building container (default use cache)."
 	@echo
@@ -112,7 +112,7 @@ cache/%/docker_$1.tar: %_$1
 sh_targets_$1 = $(addprefix sh_, $(addsuffix _$1, $(DISTROS)))
 .PHONY: $$(sh_targets_$1)
 $$(sh_targets_$1): sh_%_$1: %_$1
-	${DOCKER_RUN_CMD} -it --name ${PROJECT}_${BUILD_SYSTEM}_$$*_$1 ${IMAGE}:$$*_$1
+	${DOCKER_RUN_CMD} -it --name ${IMAGE}_$$*_$1 ${IMAGE}:$$*_$1
 
 #$$(info Create targets: $(addprefix clean_, $(addsuffix _$1, $(DISTROS))).)
 clean_targets_$1 = $(addprefix clean_, $(addsuffix _$1, $(DISTROS)))
@@ -125,14 +125,14 @@ endef
 
 $(foreach stage,$(STAGES),$(eval $(call make-stage-target,$(stage))))
 
-# CLEAN
-targets = $(addprefix clean_, $(DISTROS))
-.PHONY: clean $(targets)
-clean: $(targets)
+## CLEAN ##
+clean_targets = $(addprefix clean_, $(DISTROS))
+.PHONY: clean $(clean_targets)
+clean: $(clean_targets)
 	docker container prune -f
 	docker image prune -f
 	-rmdir cache
-$(targets): clean_%: $(addprefix clean_%_, $(STAGES))
+$(clean_targets): clean_%: $(addprefix clean_%_, $(STAGES))
 	-rmdir cache/$*
 
 .PHONY: distclean

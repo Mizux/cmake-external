@@ -5,8 +5,9 @@ LABEL maintainer="mizux.dev@gmail.com"
 # Install system build dependencies
 ENV PATH=/usr/local/bin:$PATH
 RUN dnf -y update \
+&& dnf -y install git wget \
 && dnf -y groupinstall "Development Tools" \
-&& dnf -y install git cmake gcc-c++ \
+&& dnf -y install gcc-c++ cmake \
 && dnf clean all
 
 # Add the library src to our build env
@@ -15,6 +16,7 @@ WORKDIR /home/project
 COPY . .
 
 FROM devel AS build
+RUN cmake -version
 RUN cmake -S. -Bbuild
 RUN cmake --build build --target all -v
 RUN cmake --build build --target install -v
