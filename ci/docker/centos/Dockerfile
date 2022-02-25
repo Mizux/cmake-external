@@ -1,6 +1,6 @@
 # Create a virtual environment with all tools installed
-# ref: https://hub.docker.com/_/centos
-FROM centos:latest AS env
+# ref: https://quay.io/repository/centos/centos
+FROM quay.io/centos/centos:stream AS env
 LABEL maintainer="mizux.dev@gmail.com"
 # Install system build dependencies
 ENV PATH=/usr/local/bin:$PATH
@@ -23,12 +23,12 @@ COPY . .
 
 FROM devel AS build
 RUN cmake -version
-RUN cmake -S. -Bbuild
+RUN cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
 RUN cmake --build build --target all -v
 RUN cmake --build build --target install -v
 
 FROM build AS test
-RUN cmake --build build --target test
+RUN cmake --build build --target test -v
 
 # Test install rules
 FROM env AS install_env
