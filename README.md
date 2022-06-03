@@ -1,6 +1,4 @@
 [![Build Status][docker_status]][docker_link]
-[![Build Status](https://travis-ci.com/Mizux/cmake-external.svg?branch=master)](https://travis-ci.com/Mizux/cmake-external)
-[![Build status](https://ci.appveyor.com/api/projects/status/j569d0cnv2fktecn/branch/master?svg=true)](https://ci.appveyor.com/project/Mizux/cmake-external/branch/master)
 
 [docker_status]: https://github.com/Mizux/cmake-external/workflows/Docker/badge.svg?branch=master
 [docker_link]: https://github.com/Mizux/cmake-external/actions?query=workflow%3A"Docker"
