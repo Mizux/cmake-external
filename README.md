@@ -1,7 +1,14 @@
-[![Build Status][docker_status]][docker_link]
+Github-CI:<br>
+[![Build Status][github_linux_status]][github_linux_link]
+[![Build Status][github_macos_status]][github_macos_link]
+[![Build Status][github_windows_status]][github_windows_link]
 
-[docker_status]: https://github.com/Mizux/cmake-external/workflows/Docker/badge.svg?branch=master
-[docker_link]: https://github.com/Mizux/cmake-external/actions?query=workflow%3A"Docker"
+[github_linux_status]: https://github.com/Mizux/cmake-external/actions/workflows/amd64_linux.yml/badge.svg
+[github_linux_link]: https://github.com/Mizux/cmake-external/actions/workflows/amd64_linux.yml
+[github_macos_status]: https://github.com/Mizux/cmake-external/actions/workflows/amd64_macos.yml/badge.svg
+[github_macos_link]: https://github.com/Mizux/cmake-external/actions/workflows/amd64_macos.yml
+[github_windows_status]: https://github.com/Mizux/cmake-external/actions/workflows/amd64_windows.yml/badge.svg
+[github_windows_link]: https://github.com/Mizux/cmake-external/actions/workflows/amd64_windows.yml
 
 # Introduction
 
