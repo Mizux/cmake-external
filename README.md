@@ -1,77 +1,129 @@
 Github-CI:<br>
-[![Build Status][github_linux_status]][github_linux_link]
-[![Build Status][github_macos_status]][github_macos_link]
-[![Build Status][github_windows_status]][github_windows_link]
+[![Build Status][amd64_linux_status]][amd64_linux_link]
+[![Build Status][arm64_macos_status]][arm64_macos_link]
+[![Build Status][amd64_macos_status]][amd64_macos_link]
+[![Build Status][amd64_windows_status]][amd64_windows_link]<br>
 
-[github_linux_status]: https://github.com/Mizux/cmake-external/actions/workflows/amd64_linux.yml/badge.svg
-[github_linux_link]: https://github.com/Mizux/cmake-external/actions/workflows/amd64_linux.yml
-[github_macos_status]: https://github.com/Mizux/cmake-external/actions/workflows/amd64_macos.yml/badge.svg
-[github_macos_link]: https://github.com/Mizux/cmake-external/actions/workflows/amd64_macos.yml
-[github_windows_status]: https://github.com/Mizux/cmake-external/actions/workflows/amd64_windows.yml/badge.svg
-[github_windows_link]: https://github.com/Mizux/cmake-external/actions/workflows/amd64_windows.yml
+[![Build Status][amd64_docker_status]][amd64_docker_link]
+[![Build Status][arm64_docker_status]][arm64_docker_link]
+[![Build Status][riscv64_docker_status]][riscv64_docker_link]<br>
+
+[amd64_linux_status]: ./../../actions/workflows/amd64_linux.yml/badge.svg
+[amd64_linux_link]: ./../../actions/workflows/amd64_linux.yml
+[arm64_macos_status]: ./../../actions/workflows/arm64_macos.yml/badge.svg
+[arm64_macos_link]: ./../../actions/workflows/arm64_macos.yml
+[amd64_macos_status]: ./../../actions/workflows/amd64_macos.yml/badge.svg
+[amd64_macos_link]: ./../../actions/workflows/amd64_macos.yml
+[amd64_windows_status]: ./../../actions/workflows/amd64_windows.yml/badge.svg
+[amd64_windows_link]: ./../../actions/workflows/amd64_windows.yml
+
+[amd64_docker_status]: ./../../actions/workflows/amd64_docker.yml/badge.svg
+[amd64_docker_link]: ./../../actions/workflows/amd64_docker.yml
+[arm64_docker_status]: ./../../actions/workflows/arm64_docker.yml/badge.svg
+[arm64_docker_link]: ./../../actions/workflows/arm64_docker.yml
+[riscv64_docker_status]: ./../../actions/workflows/riscv64_docker.yml/badge.svg
+[riscv64_docker_link]: ./../../actions/workflows/riscv64_docker.yml
 
 # Introduction
 
+<nav for="project"> |
+<a href="#requirement">Requirement</a> |
+<a href="#codemap">Codemap</a> |
+<a href="#dependencies">Dependencies</a> |
+<a href="#build">Build</a> |
+<a href="ci/README.md">CI</a> |
+<a href="#appendices">Appendices</a> |
+<a href="#contributing">Contributing</a> |
+<a href="#license">License</a> |
+</nav>
+
 This is an example of how to create a Modern [CMake](https://cmake.org/) C++ Project using
- [ExternalProject](https://cmake.org/cmake/help/latest/module/ExternalProject.html) module to include dependency(ies) as subproject(s).
+ [FetchContent](https://cmake.org/cmake/help/latest/module/FetchContent.html) module to include dependency(ies) as subproject(s).
 
-This project should run on Linux, Mac and Windows.
+This project should run on GNU/Linux, MacOS and Windows.
 
-# CMake Dependencies Tree
-To complexify a little, the CMake project is composed of one executable (FooApp)
-with the following dependencies:  
+## Requirement
+
+You'll need:
+
+* "CMake >= 3.16".
+
+## Codemap
+
+The project layout is as follow:
+
+* [CMakeLists.txt](CMakeLists.txt) Top-level for [CMake](https://cmake.org/cmake/help/latest/) based build.
+* [cmake](cmake) Subsidiary CMake files.
+
+* [ci](ci) Root directory for continuous integration.
+
+* [Foo](Foo) Root directory for `Foo` library.
+  * [CMakeLists.txt](Foo/CMakeLists.txt) for `Foo`.
+  * [include](Foo/include) public folder.
+    * [foo](Foo/include/foo)
+      * [Foo.hpp](Foo/include/foo/Foo.hpp)
+  * [src](Foo/src) private folder.
+    * [src/Foo.cpp](Foo/src/Foo.cpp)
+* [Bar](Bar) Root directory for `Bar` library.
+  * [CMakeLists.txt](Bar/CMakeLists.txt) for `Bar`.
+  * [include](Bar/include) public folder.
+    * [bar](Bar/include/bar)
+      * [Bar.hpp](Bar/include/bar/Bar.hpp)
+  * [src](Bar/src) private folder.
+    * [src/Bar.cpp](Bar/src/Bar.cpp)
+* [FooApp](FooApp) Root directory for `FooApp` executable.
+  * [CMakeLists.txt](FooApp/CMakeLists.txt) for `FooApp`.
+  * [src](FooApp/src) private folder.
+    * [src/main.cpp](FooApp/src/main.cpp)
+
+## Dependencies
+
+To complexify a little, the CMake project is composed of three libraries (Foo, Bar and FooBar)
+with the following dependencies:
+
 ```sh
-gflags:
-glog: gflags
-zlib:
-protobuf: zlib
-FooApp: gflags glog zlib protobuf
-```
-note 1: All dependencies are built in static to have one standalone executable `FooApp`.  
-note 2: glog, zlib, protobuf need patches to be use as subproject.
-## Project directory layout
-Thus the project layout is as follow:
-```
- CMakeLists.txt // meta CMake doing the orchestration and python packaging
- cmake
- ├── CMakeLists.txt
- ├── gflags.CMakeLists.txt
- ├── glog.CMakeLists.txt
- ├── zlib.CMakeLists.txt
- ├── protobuf.CMakeLists.txt
- patches
- ├── glog.patch
- ├── zlib.patch
- ├── protobuf.patch
- FooApp
- ├── CMakeLists.txt
- └── src
-     └── main.cpp
+Foo:
+Bar:
+FooApp: PUBLIC Foo PRIVATE Bar
 ```
 
-# C++ Project Build
+note: Since `Foo` is a public dependency of `FooBar`, then `FooBarApp` will
+*see* `Foo` inlude directories
+
+## Build
+
 To build the C++ project, as usual:
+
 ```sh
-cmake -H. -Bbuild
-cmake --build build
+cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
+cmake --build build --config Release
 CTEST_OUTPUT_ON_FAILURE=1 cmake --build build --target test
 ```
 ## Build directory layout
 Since we want to use the [CMAKE_BINARY_DIR](https://cmake.org/cmake/help/latest/variable/CMAKE_BINARY_DIR.html) to generate the binary package.  
-We want this layout (tree build --prune -P "*.a|FooApp"):
+We want this layout (tree build --prune -P "*.so|FooApp"):
+
 ```
 build
-├── gflags-build
-│   └── libgflags_nothreads.a
-├── glog-build
-│   └── libglog.a
-├── zlib-build
-│   └── libz.a
-├── protobuf-build
-│   └── libprotobuf.a
-└── FooApp
-   └── FooApp
+├── bin
+│   └── FooApp
+└── lib
+    └── lib*.so
 ```
+
+## Appendices
+
+Few links on the subject...
+
+### Resources
+
+Project layout:
+* [The Pitchfork Layout Revision 1 (cxx-pflR1)](https://github.com/vector-of-bool/pitchfork)
+
+CMake:
+* https://llvm.org/docs/CMakePrimer.html
+* https://cliutils.gitlab.io/modern-cmake/
+* https://cgold.readthedocs.io/en/latest/
 
 # Contributing
 
@@ -80,11 +132,12 @@ file the Contributor License Agreement before sending any pull requests (PRs).
 Of course, if you're new to the project, it's usually best to discuss any
 proposals and reach consensus before sending your first PR.
 
-# License
+## License
 
 Apache 2. See the LICENSE file for details.
 
-# Disclaimer
+## Disclaimer
 
 This is not an official Google product, it is just code that happens to be
 owned by Google.
+
