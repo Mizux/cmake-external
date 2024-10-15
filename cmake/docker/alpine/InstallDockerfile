@@ -1,4 +1,0 @@
-FROM alpine:latest
-
-RUN apk add --no-cache git build-base cmake zlib-dev
-COPY cache/alpine/install /
