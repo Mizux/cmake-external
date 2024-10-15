@@ -1,16 +1,17 @@
 # Create a virtual environment with all tools installed
-# ref: https://hub.docker.com/_/ubuntu
-FROM ubuntu:latest AS env
+# ref: https://hub.docker.com/_/almalinux
+FROM almalinux:latest AS env
 
 # Install system build dependencies
 ENV PATH=/usr/local/bin:$PATH
-RUN apt update -q \
-&& DEBIAN_FRONTEND=noninteractive apt install -yq \
- git wget libssl-dev \
- build-essential cmake \
-&& apt-get clean \
-&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN dnf -y update \
+&& dnf -y install git wget openssl-devel cmake \
+&& dnf -y groupinstall "Development Tools" \
+&& dnf clean all \
+&& rm -rf /var/cache/dnf
+CMD [ "/usr/bin/bash" ]
 
+# Add the library src to our build env
 FROM env AS devel
 WORKDIR /home/project
 COPY . .
