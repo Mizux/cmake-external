@@ -1,72 +1,122 @@
 # This file is just an orchestration
-cmake_minimum_required(VERSION 3.8.2)
+cmake_minimum_required(VERSION 3.16..3.31)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
-# Apple: Don't modify install_name when touching RPATH.
-if(POLICY CMP0068)
-	cmake_policy(SET CMP0068 NEW)
-endif()
+# Enable output of compile commands during generation.
+option(CMAKE_EXPORT_COMPILE_COMMANDS "Export compile command" ON)
 
-# Force default build type to Release
-set(CMAKE_BUILD_TYPE "Release" CACHE STRING
-	"Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel.")
+project(CMakeExternal VERSION 1.0.0 LANGUAGES CXX)
+set(PROJECT_NAMESPACE CMakeExternal)
+message(STATUS "${PROJECT_NAME} version: ${PROJECT_VERSION}")
+#message(STATUS "major: ${PROJECT_VERSION_MAJOR}")
+#message(STATUS "minor: ${PROJECT_VERSION_MINOR}")
+#message(STATUS "patch: ${PROJECT_VERSION_PATCH}")
 
-# Use find_package everywhere, no-op if it's a target
-macro(find_package)
-	if(NOT TARGET ${ARGV0} AND NOT TARGET ${ARGV0}::${ARGV0})
-		_find_package(${ARGV})
-	else()
-		if(TARGET ${ARGV0}::${ARGV0})
-			get_target_property(TGT_VER ${ARGV0}::${ARGV0} VERSION)
-			set(TGT ${ARGV0}::${ARGV0})
-		else()
-			get_target_property(TGT_VER ${ARGV0} VERSION)
-			set(TGT ${ARGV0})
-		endif()
-		message(STATUS "Found ${ARGV0}: CMake Target ${TGT} (found version \"${TGT_VER}\")")
-		set(${ARGV0}_FOUND TRUE)
-	endif()
-endmacro()
+message(STATUS "system name: ${CMAKE_SYSTEM_NAME}")
+# Set max os target version.
+set(CMAKE_OSX_DEPLOYMENT_TARGET 10.15)
 
-project(meta VERSION 1.0 LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-include(CTest)
-include(GNUInstallDirs)
-set(CMAKE_VERBOSE_MAKEFILE ON)
-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-
-if(UNIX)
-  option(BUILD_SHARED_LIBS "Build shared libraries(.so)." ON)
+# Default Build Type to be Release
+get_property(isMultiConfig GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
+if(isMultiConfig)
+  if(NOT CMAKE_CONFIGURATION_TYPES)
+    set(CMAKE_CONFIGURATION_TYPES "Release;Debug" CACHE STRING
+    "Choose the type of builds, options are: Debug Release RelWithDebInfo MinSizeRel. (default: Release;Debug)"
+    FORCE)
+  endif()
+  message(STATUS "Configuration types: ${CMAKE_CONFIGURATION_TYPES}")
 else()
-	# only support for static build on Windows.
-	set(BUILD_SHARED_LIBS OFF)
+  if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "Release" CACHE STRING
+    "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel. (default: Release)"
+    FORCE)
+  endif()
+  message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 endif()
 
-# Build Dependencies
-add_subdirectory(cmake)
+# Layout build dir like install dir
+include(GNUInstallDirs)
+if(UNIX)
+  option(BUILD_SHARED_LIBS "Build shared libraries (.so or .dylib)." ON)
+  set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR})
+  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR})
+  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_BINDIR})
+  # for multi-config build system (e.g. Xcode, Ninja Multi-Config)
+  foreach(OutputConfig IN LISTS CMAKE_CONFIGURATION_TYPES)
+    string(TOUPPER ${OutputConfig} OUTPUTCONFIG)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR}/${OutputConfig}/${CMAKE_INSTALL_LIBDIR})
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR}/${OutputConfig}/${CMAKE_INSTALL_LIBDIR})
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR}/${OutputConfig}/${CMAKE_INSTALL_BINDIR})
+  endforeach()
+else()
+  # Currently Only support static build for windows
+  option(BUILD_SHARED_LIBS "Build shared libraries (.dll)." OFF)
+  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_BINDIR})
+  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_BINDIR})
+  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_BINDIR})
+  # for multi-config builds (e.g. msvc)
+  foreach(OutputConfig IN LISTS CMAKE_CONFIGURATION_TYPES)
+    string(TOUPPER ${OutputConfig} OUTPUTCONFIG)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR}/${OutputConfig}/${CMAKE_INSTALL_BINDIR})
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR}/${OutputConfig}/${CMAKE_INSTALL_BINDIR})
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR}/${OutputConfig}/${CMAKE_INSTALL_BINDIR})
+  endforeach()
+endif()
 
-add_subdirectory(Foo)
-add_subdirectory(FooApp)
+if(MSVC AND BUILD_SHARED_LIBS)
+  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+endif()
 
-add_subdirectory(Bar)
+# Disable CTest targets
+set_property(GLOBAL PROPERTY CTEST_TARGETS_ADDED 1)
+include(CTest)
 
-# Install
-install(EXPORT CMakeExternalTargets
-	NAMESPACE CMakeExternal::
-	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/CMakeExternal
-	COMPONENT Devel)
-include(CMakePackageConfigHelpers)
-configure_package_config_file(cmake/CMakeExternalConfig.cmake.in
-	"${PROJECT_BINARY_DIR}/CMakeExternalConfig.cmake"
-	INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/CMakeExternal"
-	NO_SET_AND_CHECK_MACRO
-  NO_CHECK_REQUIRED_COMPONENTS_MACRO)
-write_basic_package_version_file(
-	"${PROJECT_BINARY_DIR}/CMakeExternalConfigVersion.cmake"
-	COMPATIBILITY SameMajorVersion)
-install(
-	FILES
-	"${PROJECT_BINARY_DIR}/CMakeExternalConfig.cmake"
-	"${PROJECT_BINARY_DIR}/CMakeExternalConfigVersion.cmake"
-	DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/CMakeExternal"
-	COMPONENT Devel)
+option(BUILD_ZLIB "Build the ZLIB dependency Library" ON)
+message(STATUS "Build ZLIB: ${BUILD_ZLIB}")
+
+option(BUILD_absl "Build the abseil-cpp dependency Library" ON)
+message(STATUS "Build abseil-cpp: ${BUILD_absl}")
+
+option(BUILD_Protobuf "Build the Protobuf dependency Library" ON)
+message(STATUS "Build protobuf: ${BUILD_Protobuf}")
+
+if(BUILD_TESTING)
+  option(BUILD_Catch2 "Build Catch2" ON)
+  message(STATUS "Build Catch2: ${BUILD_Catch2}")
+
+  option(BUILD_re2 "Build the re2 dependency Library" ON)
+  message(STATUS "Build re2: ${BUILD_re2}")
+
+  option(BUILD_googletest "Build googletest" ON)
+  message(STATUS "Build googletest: ${BUILD_googletest}")
+
+  option(BUILD_benchmark "Build benchmark" ON)
+  message(STATUS "Build benchmark: ${BUILD_benchmark}")
+else()
+  set(BUILD_Catch2 OFF)
+  set(BUILD_re2 OFF)
+  set(BUILD_googletest OFF)
+  set(BUILD_benchmark OFF)
+endif()
+
+# Find system deps
+include(system_deps)
+
+# Build Needed dependencies
+add_subdirectory(cmake/dependencies dependencies)
+
+include(host)
+# verify deps
+include(check_deps)
+
+include(cpp)
+
+## Examples
+option(BUILD_EXAMPLES "Build examples" ON)
+message(STATUS "Build examples: ${BUILD_EXAMPLES}")
+add_subdirectory(examples)
