@@ -12,6 +12,11 @@ set_target_properties(Foo PROPERTIES
   VERSION ${PROJECT_VERSION}
   POSITION_INDEPENDENT_CODE ON
   PUBLIC_HEADER include/foo/Foo.hpp)
+if(APPLE)
+  set_target_properties(Foo PROPERTIES INSTALL_RPATH "@loader_path")
+elseif(UNIX)
+  set_target_properties(Foo PROPERTIES INSTALL_RPATH "$ORIGIN")
+endif()
 target_link_libraries(Foo PRIVATE absl::log)
 add_library(${PROJECT_NAMESPACE}::Foo ALIAS Foo)
 
