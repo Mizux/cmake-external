@@ -1,26 +1,29 @@
-cmake_minimum_required(VERSION 3.8.2)
-project(Bar VERSION 1.0.0 LANGUAGES CXX)
+add_library(Bar OBJECT)
 
-file(GLOB _HDRS "include/bar/*.hpp" "include/bar/*.hxx")
-file(GLOB _SRCS "src/*.[hc]pp")
+target_sources(Bar
+  PRIVATE
+    include/bar/Bar.hpp
+    src/Bar.cpp)
+target_include_directories(Bar
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>)
+target_compile_features(Bar PUBLIC cxx_std_20)
+set_target_properties(Bar PROPERTIES
+  VERSION ${PROJECT_VERSION}
+  POSITION_INDEPENDENT_CODE ON
+  PUBLIC_HEADER include/bar/Bar.hpp)
+target_link_libraries(Bar PRIVATE absl::log)
+add_library(${PROJECT_NAMESPACE}::Bar ALIAS Bar)
 
-add_library(${PROJECT_NAME} SHARED ${_HDRS} ${_SRCS})
-target_include_directories(${PROJECT_NAME} PUBLIC
-	$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-	$<INSTALL_INTERFACE:include>)
-set_target_properties(${PROJECT_NAME} PROPERTIES
-	PUBLIC_HEADER ${_HDRS}
-	VERSION ${PROJECT_VERSION}
-	SOVERSION ${PROJECT_VERSION_MAJOR})
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_11)
-target_link_libraries(${PROJECT_NAME} PUBLIC CMakeExternal::Foo)
-add_library(CMakeExternal::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+add_subdirectory(tests)
 
 # Install
-install(TARGETS ${PROJECT_NAME}
-	EXPORT CMakeExternalTargets
-	PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/bar
-	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-	#RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-	)
+include(GNUInstallDirs)
+install(TARGETS Bar
+  EXPORT ${PROJECT_NAME}Targets
+  PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/bar
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  #RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)

@@ -1,56 +1,24 @@
-cmake_minimum_required(VERSION 3.8.2)
-project(Foo VERSION 1.0.0 LANGUAGES CXX)
+add_library(Foo OBJECT)
+target_sources(Foo
+  PRIVATE
+    include/foo/Foo.hpp
+    src/Foo.cpp)
+target_include_directories(Foo
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>)
+target_compile_features(Foo PUBLIC cxx_std_20)
+set_target_properties(Foo PROPERTIES
+  VERSION ${PROJECT_VERSION}
+  POSITION_INDEPENDENT_CODE ON
+  PUBLIC_HEADER include/foo/Foo.hpp)
+target_link_libraries(Foo PRIVATE absl::log)
+add_library(${PROJECT_NAMESPACE}::Foo ALIAS Foo)
 
-file(GLOB _HDRS "include/foo/*.hpp" "include/foo/*.hxx")
-file(GLOB _SRCS "src/*.[hc]pp")
-
-find_package(gflags REQUIRED)
-find_package(glog REQUIRED)
-find_package(ZLIB REQUIRED)
-find_package(Protobuf REQUIRED)
-
-add_library(${PROJECT_NAME}_obj OBJECT ${_HDRS} ${_SRCS})
-target_include_directories(${PROJECT_NAME}_obj PRIVATE
-	$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-	$<INSTALL_INTERFACE:include>
-	$<TARGET_PROPERTY:gflags::gflags,INTERFACE_INCLUDE_DIRECTORIES>
-	$<TARGET_PROPERTY:glog::glog,INTERFACE_INCLUDE_DIRECTORIES>
-)
-target_compile_options(${PROJECT_NAME}_obj PRIVATE
-	$<TARGET_PROPERTY:gflags::gflags,INTERFACE_COMPILE_OPTIONS>
-	$<TARGET_PROPERTY:glog::glog,INTERFACE_COMPILE_OPTIONS>
-	)
-target_compile_definitions(${PROJECT_NAME}_obj PRIVATE
-	$<TARGET_PROPERTY:gflags::gflags,INTERFACE_COMPILE_DEFINITIONS>
-	$<TARGET_PROPERTY:glog::glog,INTERFACE_COMPILE_DEFINITIONS>
-	)
-target_compile_features(${PROJECT_NAME}_obj PUBLIC cxx_std_11)
-# CMakeError: Object library may not link to anything.
-#target_link_libraries(${PROJECT_NAME}_obj PUBLIC gflags::gflags glog::glog)
-
-add_library(${PROJECT_NAME} STATIC "")
-target_include_directories(${PROJECT_NAME} PUBLIC
-	$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-	$<INSTALL_INTERFACE:include>
-	)
-target_sources(${PROJECT_NAME} PRIVATE $<TARGET_OBJECTS:${PROJECT_NAME}_obj>)
-set_target_properties(${PROJECT_NAME} PROPERTIES
-	PUBLIC_HEADER ${_HDRS}
-	VERSION ${PROJECT_VERSION}
-	SOVERSION ${PROJECT_VERSION_MAJOR})
-target_link_libraries(${PROJECT_NAME} PUBLIC
-	gflags::gflags
-	glog::glog
-	ZLIB::ZLIB
-	protobuf::libprotobuf
-	)
-add_library(CMakeExternal::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+add_subdirectory(tests)
 
 # Install
-install(TARGETS ${PROJECT_NAME}
-	EXPORT CMakeExternalTargets
-	PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/foo
-	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-	#RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-	)
+install(TARGETS Foo
+  EXPORT ${PROJECT_NAME}Targets
+  PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/foo
+  )
