@@ -23,7 +23,9 @@ target_link_libraries(FooApp PRIVATE
   ZLIB::ZLIB
   absl::flags_parse
   absl::log
+  absl::log_globals
   absl::log_initialize
+  absl::log_severity
   absl::strings
   protobuf::libprotobuf
   CMakeExternal::Foo
