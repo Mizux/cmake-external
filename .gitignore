@@ -4,6 +4,7 @@ export/
 cache/
 
 .vagrant/
+/msg.txt
 
 # IDE
 .vs/
