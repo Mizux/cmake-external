@@ -1,5 +1,4 @@
-add_library(Bar OBJECT)
-
+add_library(Bar)
 target_sources(Bar
   PRIVATE
     include/bar/Bar.hpp

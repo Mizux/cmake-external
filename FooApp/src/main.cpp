@@ -11,6 +11,8 @@
 #include <absl/log/initialize.h>
 #include <absl/log/log.h>
 #include <absl/strings/str_join.h>
+
+#include "bar/Bar.hpp"
 #include "foo/Foo.hpp"
 
 #include <zlib.h>
@@ -29,6 +31,9 @@ int main(int argc, char* argv[]) {
     std::string s = absl::StrJoin(v, "-");
     LOG(INFO) << "Joined string: " << s << "\n";
   }
+
+  foo::Foo::staticFunction(int{0});
+  bar::Bar::staticFunction(int{1});
 
   GOOGLE_PROTOBUF_VERIFY_VERSION;
   // Write a Message

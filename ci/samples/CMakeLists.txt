@@ -15,6 +15,7 @@ target_link_libraries(sample PRIVATE
   absl::log
   absl::strings
   CMakeExternal::Foo
+  CMakeExternal::Bar
 )
 
 if(BUILD_TESTING)

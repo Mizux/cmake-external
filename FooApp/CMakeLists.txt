@@ -29,6 +29,7 @@ target_link_libraries(FooApp PRIVATE
   absl::strings
   protobuf::libprotobuf
   CMakeExternal::Foo
+  CMakeExternal::Bar
 )
 
 add_executable(${PROJECT_NAMESPACE}::FooApp ALIAS FooApp)
