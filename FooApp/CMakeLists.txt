@@ -21,9 +21,9 @@ elseif(UNIX)
 endif()
 target_link_libraries(FooApp PRIVATE
   ZLIB::ZLIB
-  absl::flags
   absl::flags_parse
   absl::log
+  absl::log_initialize
   absl::strings
   protobuf::libprotobuf
   CMakeExternal::Foo

@@ -4,9 +4,8 @@
 #include <string>
 #include <vector>
 
+#include "absl/log/initialize.h"
 #include <absl/log/log.h>
-#include <absl/flags/declare.h>
-#include <absl/flags/flag.h>
 #include <absl/flags/parse.h>
 #include <absl/strings/str_join.h>
 #include "foo/Foo.hpp"
@@ -14,18 +13,15 @@
 #include <zlib.h>
 #include "msg.pb.h"
 
-// Forward the new flag.
-ABSL_DECLARE_FLAG(int, stderrthreshold);
-
 void AddMsg(msg::Msg* msgPtr, const std::string& key, std::int32_t value);
 
 int main(int argc, char* argv[]) {
   absl::ParseCommandLine(argc, argv);
-
+  absl::InitializeLog();
   {
     const std::vector<std::string> v = {"foo","bar","baz"};
     std::string s = absl::StrJoin(v, "-");
-    std::cout << "Joined string: " << s << "\n";
+    LOG(INFO) << "Joined string: " << s << "\n";
   }
 
   GOOGLE_PROTOBUF_VERIFY_VERSION;
