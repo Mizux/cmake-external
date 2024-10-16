@@ -4,11 +4,12 @@
 #include <string>
 #include <vector>
 
+#include <absl/log/log.h>
+#include <absl/flags/declare.h>
+#include <absl/flags/flag.h>
+#include <absl/flags/parse.h>
+#include <absl/strings/str_join.h>
 #include "foo/Foo.hpp"
-#include "absl/flags/declare.h"
-#include "absl/flags/flag.h"
-#include "absl/flags/parse.h"
-#include "absl/strings/str_join.h"
 
 #include <zlib.h>
 #include "msg.pb.h"
@@ -19,12 +20,7 @@ ABSL_DECLARE_FLAG(int, stderrthreshold);
 void AddMsg(msg::Msg* msgPtr, const std::string& key, std::int32_t value);
 
 int main(int argc, char* argv[]) {
-  //FLAGS_logtostderr = true;
   absl::ParseCommandLine(argc, argv);
-  // Initialize Google's logging library.
-  //google::InitGoogleLogging(argv[0]);
-  //foo::helloWorld();
-  //google::ShutdownGoogleLogging();
 
   {
     const std::vector<std::string> v = {"foo","bar","baz"};

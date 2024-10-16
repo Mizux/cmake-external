@@ -4,7 +4,7 @@
 #include <string>
 #include <utility>
 
-#include "absl/log/log.h"
+#include <absl/log/log.h>
 
 namespace foo {
 std::vector<std::string> stringVectorOutput(int level) {
