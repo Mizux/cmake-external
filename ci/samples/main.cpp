@@ -1,18 +1,25 @@
 #include <iostream>
+#include <string>
+#include <vector>
+
+#include <absl/log/log.h>
+#include <absl/flags/parse.h>
+#include <absl/strings/str_join.h>
 
 #include <foo/Foo.hpp>
 #include <bar/Bar.hpp>
-#include <foobar/FooBar.hpp>
 
-int main(int /*argc*/, char** /*argv*/) {
-  foo::freeFunction(0);
-  bar::freeFunction(1);
-  foobar::freeFunction(2);
-  std::cout << std::endl;
+int main(int argc, char* argv[]) {
+  absl::ParseCommandLine(argc, argv);
+
+  {
+    const std::vector<std::string> v = {"foo","bar","baz"};
+    std::string s = absl::StrJoin(v, "-");
+    LOG(INFO) << "Joined string: " << s << "\n";
+  }
 
   foo::Foo::staticFunction(int{0});
   bar::Bar::staticFunction(int{1});
-  foobar::FooBar::staticFunction(int{2});
   std::cout << std::endl;
 
   return 0;
