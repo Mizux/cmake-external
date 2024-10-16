@@ -20,6 +20,7 @@ elseif(UNIX)
     INSTALL_RPATH "$ORIGIN/../${CMAKE_INSTALL_LIBDIR}")
 endif()
 target_link_libraries(FooApp PRIVATE
+  ZLIB::ZLIB
   absl::flags
   absl::flags_parse
   absl::log
