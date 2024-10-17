@@ -13,6 +13,7 @@ set_target_properties(sample PROPERTIES
 target_link_libraries(sample PRIVATE
   absl::flags_parse
   absl::log
+  absl::log_initialize
   absl::strings
   CMakeExternal::Foo
   CMakeExternal::Bar
