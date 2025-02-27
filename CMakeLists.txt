@@ -85,12 +85,12 @@ message(STATUS "Build abseil-cpp: ${BUILD_absl}")
 option(BUILD_Protobuf "Build the Protobuf dependency Library" ON)
 message(STATUS "Build protobuf: ${BUILD_Protobuf}")
 
+option(BUILD_re2 "Build the re2 dependency Library" ON)
+message(STATUS "Build re2: ${BUILD_re2}")
+
 if(BUILD_TESTING)
   option(BUILD_Catch2 "Build Catch2" ON)
   message(STATUS "Build Catch2: ${BUILD_Catch2}")
-
-  option(BUILD_re2 "Build the re2 dependency Library" ON)
-  message(STATUS "Build re2: ${BUILD_re2}")
 
   option(BUILD_googletest "Build googletest" ON)
   message(STATUS "Build googletest: ${BUILD_googletest}")
