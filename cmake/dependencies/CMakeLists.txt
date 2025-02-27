@@ -61,21 +61,37 @@ if(BUILD_Protobuf)
   set(protobuf_BUILD_EXPORT OFF)
   set(protobuf_MSVC_STATIC_RUNTIME OFF)
   #set(protobuf_BUILD_LIBUPB ON)
-  set(protobuf_WITH_ZLIB OFF)
   FetchContent_Declare(
     Protobuf
     GIT_REPOSITORY "https://github.com/protocolbuffers/protobuf.git"
-    GIT_TAG "v27.3"
+    GIT_TAG "v29.3"
     GIT_SHALLOW TRUE
     GIT_SUBMODULES ""
-    PATCH_COMMAND git apply --ignore-whitespace
-    "${CMAKE_CURRENT_LIST_DIR}/../../patches/protobuf-v27.3.patch"
+    PATCH_COMMAND git apply --ignore-whitespace "${CMAKE_CURRENT_LIST_DIR}/../../patches/protobuf-v29.3.patch"
   )
   FetchContent_MakeAvailable(Protobuf)
   list(POP_BACK CMAKE_MESSAGE_INDENT)
   message(CHECK_PASS "fetched")
 endif()
 
+# ##############################################################################
+# RE2
+# ##############################################################################
+if(BUILD_re2)
+  message(CHECK_START "Fetching re2")
+  list(APPEND CMAKE_MESSAGE_INDENT "  ")
+  set(RE2_BUILD_TESTING OFF)
+  FetchContent_Declare(
+    re2
+    GIT_REPOSITORY "https://github.com/google/re2.git"
+    GIT_TAG "2024-04-01"
+    GIT_SHALLOW TRUE
+    PATCH_COMMAND git apply --ignore-whitespace "${CMAKE_CURRENT_LIST_DIR}/../../patches/re2-2024-04-01.patch"
+  )
+  FetchContent_MakeAvailable(re2)
+  list(POP_BACK CMAKE_MESSAGE_INDENT)
+  message(CHECK_PASS "fetched")
+endif()
 ###############
 ##  TESTING  ##
 ###############
@@ -89,23 +105,6 @@ if(BUILD_Catch2)
     GIT_SHALLOW TRUE
     FIND_PACKAGE_ARGS)
   FetchContent_MakeAvailable(Catch2)
-  list(POP_BACK CMAKE_MESSAGE_INDENT)
-  message(CHECK_PASS "fetched")
-endif()
-
-if(BUILD_re2)
-  message(CHECK_START "Fetching re2")
-  list(APPEND CMAKE_MESSAGE_INDENT "  ")
-  set(RE2_BUILD_TESTING OFF)
-  FetchContent_Declare(
-    re2
-    GIT_REPOSITORY "https://github.com/google/re2.git"
-    GIT_TAG "2024-04-01"
-    GIT_SHALLOW TRUE
-    PATCH_COMMAND git apply --ignore-whitespace
-    "${CMAKE_CURRENT_LIST_DIR}/../../patches/re2-2024-04-01.patch"
-  )
-  FetchContent_MakeAvailable(re2)
   list(POP_BACK CMAKE_MESSAGE_INDENT)
   message(CHECK_PASS "fetched")
 endif()
@@ -136,7 +135,7 @@ if(BUILD_benchmark)
   FetchContent_Declare(
     benchmark
     GIT_REPOSITORY https://github.com/google/benchmark.git
-    GIT_TAG v1.8.4
+    GIT_TAG v1.9.1
     GIT_SHALLOW TRUE
     #PATCH_COMMAND git apply --ignore-whitespace ""
   )
