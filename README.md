@@ -1,28 +1,28 @@
 Github-CI:<br>
 [![Build Status][amd64_linux_status]][amd64_linux_link]
-[![Build Status][arm64_macos_status]][arm64_macos_link]
 [![Build Status][amd64_macos_status]][amd64_macos_link]
+[![Build Status][arm64_macos_status]][arm64_macos_link]
 [![Build Status][amd64_windows_status]][amd64_windows_link]<br>
 
 [![Build Status][amd64_docker_status]][amd64_docker_link]
 [![Build Status][arm64_docker_status]][arm64_docker_link]
 [![Build Status][riscv64_docker_status]][riscv64_docker_link]<br>
 
-[amd64_linux_status]: ./../../actions/workflows/amd64_linux.yml/badge.svg
-[amd64_linux_link]: ./../../actions/workflows/amd64_linux.yml
-[arm64_macos_status]: ./../../actions/workflows/arm64_macos.yml/badge.svg
-[arm64_macos_link]: ./../../actions/workflows/arm64_macos.yml
-[amd64_macos_status]: ./../../actions/workflows/amd64_macos.yml/badge.svg
-[amd64_macos_link]: ./../../actions/workflows/amd64_macos.yml
-[amd64_windows_status]: ./../../actions/workflows/amd64_windows.yml/badge.svg
-[amd64_windows_link]: ./../../actions/workflows/amd64_windows.yml
+[amd64_linux_status]: ./../../actions/workflows/amd64_linux_cmake.yml/badge.svg
+[amd64_linux_link]: ./../../actions/workflows/amd64_linux_cmake.yml
+[amd64_macos_status]: ./../../actions/workflows/amd64_macos_cmake.yml/badge.svg
+[amd64_macos_link]: ./../../actions/workflows/amd64_macos_cmake.yml
+[arm64_macos_status]: ./../../actions/workflows/arm64_macos_cmake.yml/badge.svg
+[arm64_macos_link]: ./../../actions/workflows/arm64_macos_cmake.yml
+[amd64_windows_status]: ./../../actions/workflows/amd64_windows_cmake.yml/badge.svg
+[amd64_windows_link]: ./../../actions/workflows/amd64_windows_cmake.yml
 
-[amd64_docker_status]: ./../../actions/workflows/amd64_docker.yml/badge.svg
-[amd64_docker_link]: ./../../actions/workflows/amd64_docker.yml
-[arm64_docker_status]: ./../../actions/workflows/arm64_docker.yml/badge.svg
-[arm64_docker_link]: ./../../actions/workflows/arm64_docker.yml
-[riscv64_docker_status]: ./../../actions/workflows/riscv64_docker.yml/badge.svg
-[riscv64_docker_link]: ./../../actions/workflows/riscv64_docker.yml
+[amd64_docker_status]: ./../../actions/workflows/amd64_docker_cmake.yml/badge.svg
+[amd64_docker_link]: ./../../actions/workflows/amd64_docker_cmake.yml
+[arm64_docker_status]: ./../../actions/workflows/arm64_docker_cmake.yml/badge.svg
+[arm64_docker_link]: ./../../actions/workflows/arm64_docker_cmake.yml
+[riscv64_docker_status]: ./../../actions/workflows/riscv64_docker_cmake.yml/badge.svg
+[riscv64_docker_link]: ./../../actions/workflows/riscv64_docker_cmake.yml
 
 # Introduction
 

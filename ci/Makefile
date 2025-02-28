@@ -22,7 +22,7 @@ help:
 	@echo -e "\t${BOLD}save_<distro>_<stage>${RESET}: Save a <stage> docker image for a specific distro."
 	@echo -e "\t${BOLD}sh_<distro>_<stage>${RESET}: run a container using the <stage> docker image specified (debug purpose)."
 	@echo -e "\t${BOLD}clean_<distro>_<stage>${RESET}: Remove a <stage> docker image for a specific distro."
-	@echo -e "\t${BOLD}clean_native${RESET}: Remove ALL caches and docker images."
+	@echo -e "\t${BOLD}clean_all${RESET}: Remove ALL caches and docker images."
 	@echo
 	@echo -e "\tWith ${BOLD}<distro>${RESET}:"
 	@echo -e "\t\t${BOLD}almalinux${RESET} (latest)"
@@ -78,10 +78,13 @@ help:
 	@echo -e "\t${BOLD}clean_vms${RESET}: Remove ALL vagrant box."
 	@echo
 	@echo -e "\tWith ${BOLD}<vm>${RESET}:"
-	@echo -e "\t\t${BOLD}freebsd${RESET} (FreeBSD)"
+	@echo -e "\t\t${BOLD}freebsd${RESET} (FreeBSD 14)"
+	@echo -e "\t\t${BOLD}netbsd${RESET} (NetBSD 9)"
+	@echo -e "\t\t${BOLD}openbsd${RESET} (OpenBSD 7)"
 	@echo
 	@echo -e "\tWith ${BOLD}<vms_stage>${RESET}:"
 	@echo -e "\t\t${BOLD}build${RESET}"
+	@echo -e "\te.g. 'make freebsd_build'"
 	@echo
 	@echo -e "\tGlobal targets."
 	@echo -e "\t${BOLD}clean${RESET}: Remove ALL caches and docker images."
@@ -166,7 +169,7 @@ cache/%/docker_$1.tar: %_$1
 sh_targets_$1 := $(addprefix sh_, $(addsuffix _$1, $(DISTROS)))
 .PHONY: $$(sh_targets_$1)
 $$(sh_targets_$1): sh_%_$1: %_$1
-	${DOCKER_RUN_CMD} -it --name ${IMAGE}_$$*_$1 ${IMAGE}:$$*_$1
+	${DOCKER_RUN_CMD} -it --name ${PROJECT}_$$*_$1 ${IMAGE}:$$*_$1
 
 #$$(info Create targets: clean_all_$1 $(addprefix clean_, $(addsuffix _$1, $(DISTROS))).)
 clean_targets_$1 := $(addprefix clean_, $(addsuffix _$1, $(DISTROS)))
