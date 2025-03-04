@@ -17,7 +17,7 @@ jobs:
           {name: "VS22", generator: "Visual Studio 17 2022", config: Debug, build_target: ALL_BUILD, test_target: RUN_TESTS, install_target: INSTALL},
         ]
       fail-fast: false
-    name: Windows•CMake(${{matrix.cmake.name}},${{matrix.cmake.config}})
+    name: amd64•Windows•CMake(${{matrix.cmake.name}},${{matrix.cmake.config}})
     runs-on: windows-latest
     env:
       CTEST_OUTPUT_ON_FAILURE: 1

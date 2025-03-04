@@ -17,7 +17,7 @@ jobs:
           {name: "Make", generator: "Unix Makefiles", config: Release, build_target: all, test_target: test, install_target: install},
         ]
       fail-fast: false
-    name: MacOS•CMake(${{matrix.cmake.name}})
+    name: amd64•MacOS•CMake(${{matrix.cmake.name}})
     runs-on: macos-13 # last macos intel based runner
     steps:
       - uses: actions/checkout@v4

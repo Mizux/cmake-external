@@ -13,12 +13,12 @@ jobs:
     strategy:
       matrix:
         cmake: [
-          {generator: "Unix Makefiles", config: "Release"},
-          {generator: "Ninja", config: "Release"},
-          {generator: "Ninja Multi-Config", config: "Release"},
+          {name: "Make", generator: "Unix Makefiles", config: "Release"},
+          {name: "Ninja", generator: "Ninja", config: "Release"},
+          {name: "Ninja Multi", generator: "Ninja Multi-Config", config: "Release"},
         ]
       fail-fast: false
-    name: Linux•CMake(${{matrix.cmake.generator}})
+    name: amd64•Linux•CMake(${{matrix.cmake.name}})
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
