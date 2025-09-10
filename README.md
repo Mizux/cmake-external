@@ -100,6 +100,7 @@ cmake --build build --config Release
 CTEST_OUTPUT_ON_FAILURE=1 cmake --build build --target test
 ```
 ## Build directory layout
+
 Since we want to use the [CMAKE_BINARY_DIR](https://cmake.org/cmake/help/latest/variable/CMAKE_BINARY_DIR.html) to generate the binary package.  
 We want this layout (tree build --prune -P "*.so|FooApp"):
 
