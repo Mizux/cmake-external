@@ -29,6 +29,7 @@ jobs:
       deps_src_key: arm64_macos_deps_src
       deps_build_key: arm64_macos_deps_build_${{matrix.cmake.name}}
       ccache_key: arm64_macos_ccache_${{matrix.cmake.name}}
+      xcode_key: arm64_macos_xcode_${{matrix.cmake.name}}
     steps:
       - uses: actions/checkout@v5
       - name: Install Dependencies
@@ -55,6 +56,12 @@ jobs:
             ${{env.ccache_key}}-${{github.sha}}
             ${{env.ccache_key}}
           path: ${{env.CCACHE_DIR}}
+      - uses: irgaly/xcode-cache@v1
+        with:
+          key: ${{env.xcode_key}}-${{github.sha}}
+          restore-keys: |
+            ${{env.xcode_key}}-${{github.sha}}
+            ${{env.xcode_key}}-
 
       - name: Check CMake
         run: cmake --version
