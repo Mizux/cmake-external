@@ -93,34 +93,20 @@ if(BUILD_re2)
   list(POP_BACK CMAKE_MESSAGE_INDENT)
   message(CHECK_PASS "fetched")
 endif()
+
 ###############
 ##  TESTING  ##
 ###############
-if(BUILD_Catch2)
-  message(CHECK_START "Fetching Catch2")
-  list(APPEND CMAKE_MESSAGE_INDENT "  ")
-  FetchContent_Declare(
-    Catch2
-    GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-    GIT_TAG devel
-    GIT_SHALLOW TRUE
-    FIND_PACKAGE_ARGS)
-  FetchContent_MakeAvailable(Catch2)
-  list(POP_BACK CMAKE_MESSAGE_INDENT)
-  message(CHECK_PASS "fetched")
-endif()
-
 if(BUILD_googletest)
   message(CHECK_START "Fetching googletest")
   list(APPEND CMAKE_MESSAGE_INDENT "  ")
   FetchContent_Declare(
     googletest
     GIT_REPOSITORY https://github.com/google/googletest.git
-    GIT_TAG v1.15.2
+    GIT_TAG v1.17.0
     GIT_SHALLOW TRUE
     PATCH_COMMAND git apply --ignore-whitespace
-    "${CMAKE_CURRENT_LIST_DIR}/../../patches/googletest-v1.15.2.patch"
-    #FIND_PACKAGE_ARGS NAMES GTest GMock
+    "${CMAKE_CURRENT_LIST_DIR}/../../patches/googletest-v1.17.0.patch"
   )
   set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
   set(INSTALL_GTEST OFF)
@@ -136,7 +122,7 @@ if(BUILD_benchmark)
   FetchContent_Declare(
     benchmark
     GIT_REPOSITORY https://github.com/google/benchmark.git
-    GIT_TAG v1.9.1
+    GIT_TAG v1.9.2
     GIT_SHALLOW TRUE
     #PATCH_COMMAND git apply --ignore-whitespace ""
   )
