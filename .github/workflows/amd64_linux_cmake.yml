@@ -53,7 +53,7 @@ jobs:
       - name: Cache CCache
         uses: actions/cache@v4
         with:
-          key: ${{env.ccache_key}}-${{github.job}
+          key: ${{env.ccache_key}}-${{github.job}}
           restore-keys: |
             ${{env.ccache_key}}-${{github.job}}
             ${{env.ccache_key}}
