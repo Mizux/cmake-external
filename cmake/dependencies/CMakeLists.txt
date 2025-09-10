@@ -18,7 +18,8 @@ if(BUILD_ZLIB)
     GIT_TAG "v1.3.1"
     GIT_SHALLOW TRUE
     PATCH_COMMAND git apply --ignore-whitespace
-    "${CMAKE_CURRENT_LIST_DIR}/../../patches/ZLIB-v1.3.1.patch")
+    "${CMAKE_CURRENT_LIST_DIR}/../../patches/ZLIB-v1.3.1.patch"
+  )
   set(ZLIB_BUILD_EXAMPLES OFF)
   FetchContent_MakeAvailable(ZLIB)
   list(POP_BACK CMAKE_MESSAGE_INDENT)
@@ -34,11 +35,12 @@ if(BUILD_absl)
   FetchContent_Declare(
     absl
     GIT_REPOSITORY "https://github.com/abseil/abseil-cpp.git"
-    GIT_TAG "20240722.0"
+    GIT_TAG "20250814.0"
     GIT_SHALLOW TRUE
     PATCH_COMMAND git apply --ignore-whitespace
-    "${CMAKE_CURRENT_LIST_DIR}/../../patches/abseil-cpp-20240722.0.patch"
-    OVERRIDE_FIND_PACKAGE)
+    "${CMAKE_CURRENT_LIST_DIR}/../../patches/abseil-cpp-20250814.0.patch"
+    OVERRIDE_FIND_PACKAGE
+  )
   set(ABSL_USE_SYSTEM_INCLUDES ON)
   # We want Abseil to declare what C++ standard it was compiled with.
   set(ABSL_PROPAGATE_CXX_STD ON)
@@ -60,10 +62,11 @@ if(BUILD_Protobuf)
   FetchContent_Declare(
     Protobuf
     GIT_REPOSITORY "https://github.com/protocolbuffers/protobuf.git"
-    GIT_TAG "v29.3"
+    GIT_TAG "v32.0"
     GIT_SHALLOW TRUE
     GIT_SUBMODULES ""
-    PATCH_COMMAND git apply --ignore-whitespace "${CMAKE_CURRENT_LIST_DIR}/../../patches/protobuf-v29.3.patch"
+    PATCH_COMMAND git apply --ignore-whitespace
+    "${CMAKE_CURRENT_LIST_DIR}/../../patches/protobuf-v32.0.patch"
   )
   set(protobuf_BUILD_TESTS OFF)
   set(protobuf_BUILD_SHARED_LIBS ON)
@@ -84,9 +87,10 @@ if(BUILD_re2)
   FetchContent_Declare(
     re2
     GIT_REPOSITORY "https://github.com/google/re2.git"
-    GIT_TAG "2024-04-01"
+    GIT_TAG "2024-07-02"
     GIT_SHALLOW TRUE
-    PATCH_COMMAND git apply --ignore-whitespace "${CMAKE_CURRENT_LIST_DIR}/../../patches/re2-2024-04-01.patch"
+    PATCH_COMMAND git apply --ignore-whitespace
+    "${CMAKE_CURRENT_LIST_DIR}/../../patches/re2-2024-07-02.patch"
   )
   set(RE2_BUILD_TESTING OFF)
   FetchContent_MakeAvailable(re2)
