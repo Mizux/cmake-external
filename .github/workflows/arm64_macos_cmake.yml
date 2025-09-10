@@ -19,8 +19,26 @@ jobs:
       fail-fast: false
     name: arm64•MacOS•CMake(${{matrix.cmake.name}})
     runs-on: macos-latest # M1 based runner
+    env:
+      deps_src_key: arm64_macos_deps_src
+      deps_build_key: arm64_macos_deps_build_${{matrix.cmake.name}}
     steps:
       - uses: actions/checkout@v5
+
+      # CONFIGURING CACHES
+      - name: Cache CMake dependency source code
+        uses: actions/cache@v4
+        with:
+          key: ${{env.deps_src_key}}-${{hashFiles('CMakeLists.txt', 'cmake/**')}}
+          path: ${{github.workspace}}/build/_deps/*-src
+      - name: Cache CMake dependency build code
+        uses: actions/cache@v4
+        with:
+          key: ${{env.deps_build_key}}-${{hashFiles('CMakeLists.txt', 'cmake/**')}}
+          path: |
+            ${{github.workspace}}/build/_deps/*-build
+            ${{github.workspace}}/build/_deps/*-subbuild
+
       - name: Check CMake
         run: cmake --version
       - name: Configure
