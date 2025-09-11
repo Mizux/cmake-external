@@ -33,9 +33,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - name: Install Dependencies
-        run: |
-          sudo apt update
-          sudo apt install -y ninja-build ccache
+        run: sudo apt install -y ninja-build ccache
 
       # CONFIGURING CACHES
       - name: Cache CMake dependency source code
