@@ -11,8 +11,6 @@ concurrency:
 env:
   CCACHE_BASEDIR: ${{github.workspace}}
   CCACHE_DIR: ${{github.workspace}}/.ccache
-  CMAKE_C_COMPILER_LAUNCHER: ccache
-  CMAKE_CXX_COMPILER_LAUNCHER: ccache
 
 jobs:
   native:
@@ -29,7 +27,6 @@ jobs:
       deps_src_key: arm64_macos_deps_src
       deps_build_key: arm64_macos_deps_build_${{matrix.cmake.name}}
       ccache_key: arm64_macos_ccache_${{matrix.cmake.name}}
-      xcode_key: arm64_macos_xcode_${{matrix.cmake.name}}
     steps:
       - uses: actions/checkout@v5
       - name: Install Dependencies
@@ -56,14 +53,6 @@ jobs:
             ${{env.ccache_key}}-${{github.sha}}
             ${{env.ccache_key}}
           path: ${{env.CCACHE_DIR}}
-      - name: Cache XCode
-        uses: actions/cache@v4
-        with:
-          key: ${{env.xcode_key}}-${{github.sha}}
-          restore-keys: |
-            ${{env.xcode_key}}-${{github.sha}}
-            ${{env.xcode_key}}-
-          path: ~/Library/Developer/Xcode/DerivedData
 
       - name: Check CMake
         run: cmake --version

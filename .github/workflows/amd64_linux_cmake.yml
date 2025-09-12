@@ -11,8 +11,6 @@ concurrency:
 env:
   CCACHE_BASEDIR: ${{github.workspace}}
   CCACHE_DIR: ${{github.workspace}}/.ccache
-  CMAKE_C_COMPILER_LAUNCHER: ccache
-  CMAKE_CXX_COMPILER_LAUNCHER: ccache
 
 jobs:
   native:
