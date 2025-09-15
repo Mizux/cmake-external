@@ -26,7 +26,7 @@ jobs:
     env:
       deps_src_key: arm64_macos_deps_src
       deps_build_key: arm64_macos_deps_build_${{matrix.cmake.name}}
-      ccache_key: arm64_macos_ccache_${{matrix.cmake.name}}
+      ccache_key: arm64_macos_ccache
     steps:
       - uses: actions/checkout@v5
       - name: Install Dependencies
@@ -81,6 +81,10 @@ jobs:
           --config ${{matrix.cmake.config}}
           --target ${{matrix.cmake.install_target}}
           -v
+      - name: CCache stats and cleanup
+        run: |
+          ccache --show-stats
+          ccache --zero-stats
 
   arm64_macos_cmake:
     runs-on: ubuntu-latest
