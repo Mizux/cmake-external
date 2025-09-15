@@ -26,7 +26,7 @@ jobs:
     env:
       deps_src_key: amd64_macos_deps_src
       deps_build_key: amd64_macos_deps_build_${{matrix.cmake.name}}
-      ccache_key: amd64_macos_ccache
+      ccache_key: amd64_macos_ccache_${{matrix.cmake.name}}
     steps:
       - uses: actions/checkout@v5
       - name: Install Dependencies
