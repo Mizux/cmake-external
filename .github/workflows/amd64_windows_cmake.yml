@@ -13,8 +13,8 @@ jobs:
     strategy:
       matrix:
         cmake: [
-          {name: "VS22", generator: "Visual Studio 17 2022", config: Release, build_target: ALL_BUILD, test_target: RUN_TESTS, install_target: INSTALL},
-          {name: "VS22", generator: "Visual Studio 17 2022", config: Debug, build_target: ALL_BUILD, test_target: RUN_TESTS, install_target: INSTALL},
+          {name: "VS22", generator: "Visual Studio 17 2022", config: Release},
+          {name: "VS22", generator: "Visual Studio 17 2022", config: Debug},
         ]
       fail-fast: false
     name: amd64•Windows•CMake(${{matrix.cmake.name}},${{matrix.cmake.config}})
@@ -54,19 +54,19 @@ jobs:
         run: >
           cmake --build build
           --config ${{matrix.cmake.config}}
-          --target ${{matrix.cmake.build_target}}
+          --target ALL_BUILD
           -v -j2
       - name: Test
         run: >
           cmake --build build
           --config ${{matrix.cmake.config}}
-          --target ${{matrix.cmake.test_target}}
+          --target RUN_TESTS
           -v
       - name: Install
         run: >
           cmake --build build
           --config ${{matrix.cmake.config}}
-          --target ${{matrix.cmake.install_target}}
+          --target INSTALL
           -v
 
   amd64_windows_cmake:
