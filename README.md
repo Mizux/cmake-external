@@ -46,7 +46,7 @@ This project should run on GNU/Linux, MacOS and Windows.
 
 You'll need:
 
-* "CMake >= 3.16".
+* "CMake >= 3.24".
 
 ## Codemap
 
