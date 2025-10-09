@@ -19,10 +19,9 @@ elseif(UNIX)
     INSTALL_RPATH "$ORIGIN/../${CMAKE_INSTALL_LIBDIR}:$ORIGIN")
 endif()
 target_link_libraries(example PRIVATE
+  #GTest::gtest_main
   ${PROJECT_NAMESPACE}::Foo
   ${PROJECT_NAMESPACE}::Bar
 )
 
-if(BUILD_TESTING)
-  add_test(NAME example COMMAND example)
-endif()
+add_test(NAME example COMMAND example)
