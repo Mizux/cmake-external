@@ -1,12 +1,7 @@
 # ref: https://github.com/docker-library/official-images
 name: riscv64 Docker CMake
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-  workflow_dispatch:
+on: [push, pull_request, workflow_dispatch]
 
 concurrency:
   group: ${{github.workflow}}-${{github.ref}}
