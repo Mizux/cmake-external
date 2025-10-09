@@ -5,7 +5,8 @@ FROM debian:unstable AS env
 # Install system build dependencies
 ENV PATH=/usr/local/bin:$PATH
 RUN apt-get update -qq \
-&& apt-get install -yq git wget libssl-dev build-essential cmake \
+&& apt-get install -yq \
+ git wget libssl-dev build-essential cmake \
 && apt-get clean \
 && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
@@ -25,7 +26,7 @@ RUN CTEST_OUTPUT_ON_FAILURE=1 cmake --build build --target test -v
 
 # Test install rules
 FROM env AS install_env
-COPY --from=build /usr/local /usr/local/
+COPY --from=build /usr/local/ /usr/local/
 
 FROM install_env AS install_devel
 WORKDIR /home/samples

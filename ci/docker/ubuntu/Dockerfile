@@ -6,8 +6,7 @@ FROM ubuntu:latest AS env
 ENV PATH=/usr/local/bin:$PATH
 RUN apt update -q \
 && DEBIAN_FRONTEND=noninteractive apt install -yq \
- git wget libssl-dev \
- build-essential cmake \
+ git wget libssl-dev build-essential cmake \
 && apt-get clean \
 && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
@@ -26,7 +25,7 @@ RUN CTEST_OUTPUT_ON_FAILURE=1 cmake --build build --target test -v
 
 # Test install rules
 FROM env AS install_env
-COPY --from=build /usr/local /usr/local/
+COPY --from=build /usr/local/ /usr/local/
 
 FROM install_env AS install_devel
 WORKDIR /home/samples
