@@ -1,5 +1,5 @@
 # This file is just an orchestration
-cmake_minimum_required(VERSION 3.16..3.31)
+cmake_minimum_required(VERSION 3.24..3.31)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 # Enable output of compile commands during generation.
@@ -74,10 +74,7 @@ endif()
 # Enable CCache if any
 include(ccache)
 
-# Disable CTest targets
-set_property(GLOBAL PROPERTY CTEST_TARGETS_ADDED 1)
-include(CTest)
-
+# Build deps
 option(BUILD_ZLIB "Build the ZLIB dependency Library" ON)
 message(STATUS "Build ZLIB: ${BUILD_ZLIB}")
 
@@ -89,6 +86,10 @@ message(STATUS "Build re2: ${BUILD_re2}")
 
 option(BUILD_Protobuf "Build the Protobuf dependency Library" ON)
 message(STATUS "Build protobuf: ${BUILD_Protobuf}")
+
+# Disable CTest targets
+set_property(GLOBAL PROPERTY CTEST_TARGETS_ADDED 1)
+include(CTest)
 
 if(BUILD_TESTING)
   option(BUILD_googletest "Build googletest" ON)
