@@ -5,10 +5,11 @@ include(CTest)
 find_package(CMakeExternal CONFIG REQUIRED)
 
 add_executable(sample)
-target_sources(sample PRIVATE
-  main.cpp)
-target_compile_features(sample PUBLIC cxx_std_17)
+target_sources(sample PRIVATE main.cpp)
+target_compile_features(sample PUBLIC cxx_std_20)
 set_target_properties(sample PROPERTIES
+  CXX_STANDARD 20
+  CXX_STANDARD_REQUIRED ON
   VERSION ${PROJECT_VERSION})
 target_link_libraries(sample PRIVATE
   absl::flags_parse
@@ -27,5 +28,4 @@ endif()
 include(GNUInstallDirs)
 install(TARGETS sample
   EXPORT SampleTargets
-  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-)
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
