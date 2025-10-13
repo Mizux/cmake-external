@@ -1,9 +1,3 @@
-#include <cstdint>
-#include <fstream>
-#include <iostream>
-#include <string>
-#include <vector>
-
 #include <absl/base/log_severity.h>
 #include <absl/flags/parse.h>
 #include <absl/flags/usage.h>
@@ -11,11 +5,16 @@
 #include <absl/log/initialize.h>
 #include <absl/log/log.h>
 #include <absl/strings/str_join.h>
+#include <zlib.h>
+
+#include <cstdint>
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <vector>
 
 #include "bar/Bar.hpp"
 #include "foo/Foo.hpp"
-
-#include <zlib.h>
 #include "msg.pb.h"
 
 void AddMsg(msg::Msg* msgPtr, const std::string& key, std::int32_t value);
@@ -27,7 +26,7 @@ int main(int argc, char* argv[]) {
   absl::SetStderrThreshold(absl::LogSeverity::kInfo);
   absl::ParseCommandLine(argc, argv);
   {
-    const std::vector<std::string> v = {"foo","bar","baz"};
+    const std::vector<std::string> v = {"foo", "bar", "baz"};
     std::string s = absl::StrJoin(v, "-");
     LOG(INFO) << "Joined string: " << s << "\n";
   }
@@ -43,7 +42,8 @@ int main(int argc, char* argv[]) {
     AddMsg(msgList.add_msgs(), "baz", 5);
     AddMsg(msgList.add_msgs(), "bop", 7);
     // Write the new address book back to disk.
-    std::fstream out("msg.txt", std::ios::out | std::ios::trunc | std::ios::binary);
+    std::fstream out("msg.txt",
+                     std::ios::out | std::ios::trunc | std::ios::binary);
     if (!msgList.SerializeToOstream(&out)) {
       std::cerr << "Failed to write /tmp/msg.txt." << std::endl;
       return -1;
@@ -59,9 +59,9 @@ int main(int argc, char* argv[]) {
       return -2;
     }
 
-    for (std::size_t i=0; i < 3; ++i) {
-      std::cout << "hello " << msgList.msgs(i).key()
-        << ":" << msgList.msgs(i).value() << std::endl;
+    for (std::size_t i = 0; i < 3; ++i) {
+      std::cout << "hello " << msgList.msgs(i).key() << ":"
+                << msgList.msgs(i).value() << std::endl;
     }
   }
 
